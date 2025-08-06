@@ -1,0 +1,39 @@
+module ov7670_capture (
+    input wire clk,
+    input wire rst,
+    input wire pclk,
+    input wire vsync,
+    input wire href,
+    input wire [7:0] data,
+    output reg frame_done
+);
+
+reg [15:0] pixel_data;
+reg byte_toggle;
+reg [19:0] pixel_count;
+
+always @(posedge pclk or posedge rst) begin
+    if (rst) begin
+        pixel_data   <= 0;
+        byte_toggle  <= 1;
+        pixel_count  <= 0;
+        frame_done   <= 0;
+    end else if (!vsync && href) begin
+        if (!byte_toggle) begin
+            pixel_data[15:8] <= data;
+        end else begin
+            pixel_data[7:0] <= data;
+            pixel_count <= pixel_count + 1;
+        end
+        byte_toggle <= ~byte_toggle;
+    end else if (!vsync && pixel_count == 307200) begin
+        frame_done <= 1;
+        pixel_count <= 0;
+        byte_toggle <= 1;
+    end else begin
+        frame_done <= 0;
+    end
+end
+
+
+endmodule

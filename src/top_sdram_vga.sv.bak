@@ -1,0 +1,154 @@
+module top_sdram_vga (
+    input  logic        clk_50MHz,
+    input  logic        reset_n,
+
+    output logic [0:0]  vga_red,
+    output logic [0:0]  vga_green,
+    output logic [0:0]  vga_blue,
+    output logic        vga_hsync,
+    output logic        vga_vsync,
+
+    output logic        cs_n,
+    output logic        ras_n,
+    output logic        cas_n,
+    output logic        we_n,
+    output logic [11:0] addr,
+    output logic [1:0]  bank,
+    output logic        cke,
+    inout  wire [15:0]  dq
+);
+
+    logic clk_133, clk_25, pll_locked;
+
+    pll_133Mhz pll_inst (
+        .areset(~reset_n),
+        .inclk0(clk_50MHz),
+        .c0(clk_133),
+        .locked(pll_locked)
+    );
+
+    clock_divider #(.DIVIDE_BY(2)) vga_clk_gen (
+        .clk_in(clk_50MHz),
+        .clk_out(clk_25)
+    );
+
+    logic [9:0] x, y;
+    logic       video_on;
+    logic       frame_start;
+
+    vga_controller vga_inst (
+        .clk(clk_25),
+        .reset(~reset_n),
+        .hsync(vga_hsync),
+        .vsync(vga_vsync),
+        .video_on(video_on),
+        .x(x),
+        .y(y),
+        .frame_start(frame_start)
+    );
+
+    logic [15:0] dq_out_writer;
+    logic        dq_oe_writer;
+    logic [15:0] dq_out;
+    logic        dq_oe;
+
+    assign dq = dq_oe ? dq_out : 16'hZZZZ;
+
+    typedef enum logic [1:0] {RESET, INIT, WRITE, READ} state_t;
+    state_t state;
+
+    logic init_done, write_done;
+
+    logic [11:0] addr_writer;
+    logic [1:0]  bank_writer;
+    logic        cs_n_writer, ras_n_writer, cas_n_writer, we_n_writer, cke_writer;
+
+    logic [11:0] addr_reader;
+    logic [1:0]  bank_reader;
+    logic        cs_n_reader, ras_n_reader, cas_n_reader, we_n_reader, cke_reader;
+    logic        dq_oe_reader;
+    logic [2:0]  rgb;
+
+    assign addr   = (state == READ) ? addr_reader   : addr_writer;
+    assign bank   = (state == READ) ? bank_reader   : bank_writer;
+    assign cs_n   = (state == READ) ? cs_n_reader   : cs_n_writer;
+    assign ras_n  = (state == READ) ? ras_n_reader  : ras_n_writer;
+    assign cas_n  = (state == READ) ? cas_n_reader  : cas_n_writer;
+    assign we_n   = (state == READ) ? we_n_reader   : we_n_writer;
+    assign cke    = (state == READ) ? cke_reader    : cke_writer;
+    assign dq_out = (state == READ) ? 16'hZZZZ      : dq_out_writer;
+    assign dq_oe  = (state == READ) ? dq_oe_reader  : dq_oe_writer;
+
+    assign vga_red[0]   = rgb[2];
+    assign vga_green[0] = rgb[1];
+    assign vga_blue[0]  = rgb[0];
+
+    // ROM instantiation
+    logic [17:0] rom_addr;
+    logic [2:0]  pixel_data;
+
+    assign rom_addr = writer_pixel_index;
+
+    image_rom rom (
+        .clk(clk_133),
+        .addr(rom_addr),
+        .pixel(pixel_data)
+    );
+
+    // Writer pixel index exposed for ROM addressing
+    logic [16:0] writer_pixel_index;
+
+    rom_to_sdram_writer writer (
+        .clk(clk_133),
+        .init_done(init_done),
+        .pixel_data(pixel_data),
+        .done(write_done),
+        .cs_n(cs_n_writer),
+        .ras_n(ras_n_writer),
+        .cas_n(cas_n_writer),
+        .we_n(we_n_writer),
+        .addr(addr_writer),
+        .ba(bank_writer),
+        .cke(cke_writer),
+        .dq_out(dq_out_writer),
+        .dq_oe(dq_oe_writer)
+    );
+
+    sdram_to_vga_reader reader (
+        .clk_sdram(clk_133),
+        .clk_vga(clk_25),
+        .video_on(video_on),
+        .x(x),
+        .y(y),
+        .frame_start(frame_start),
+        .cs_n(cs_n_reader),
+        .ras_n(ras_n_reader),
+        .cas_n(cas_n_reader),
+        .we_n(we_n_reader),
+        .addr(addr_reader),
+        .ba(bank_reader),
+        .cke(cke_reader),
+        .dq(dq),
+        .dq_oe(dq_oe_reader),
+        .rgb(rgb)
+    );
+
+    // FSM: RESET → INIT → WRITE → READ
+    always_ff @(posedge clk_133 or negedge reset_n) begin
+        if (!reset_n) begin
+            state <= RESET;
+            init_done <= 0;
+        end else begin
+            case (state)
+                RESET: state <= INIT;
+                INIT: if (pll_locked) begin
+                    init_done <= 1;
+                    state <= WRITE;
+                end
+                WRITE: if (write_done) state <= READ;
+                READ: ; // stay here
+            endcase
+        end
+    end
+
+endmodule

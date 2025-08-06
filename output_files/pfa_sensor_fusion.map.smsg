@@ -1,0 +1,1 @@
+Info (10281): Verilog HDL Declaration information at rom_to_sdram_writer.sv(5): object "done" differs only in case from object "DONE" in the same scope File: C:/Users/aelmezia/Desktop/PFA 1/Project/src/rom_to_sdram_writer.sv Line: 5

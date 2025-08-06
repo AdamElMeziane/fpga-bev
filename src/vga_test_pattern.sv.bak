@@ -1,0 +1,25 @@
+module vga_test_pattern (
+    input  logic [9:0] x,
+    input  logic [9:0] y,
+    input  logic video_on,
+    output logic [4:0] red,
+    output logic [5:0] green,
+    output logic [4:0] blue
+);
+    always_comb begin
+        if (!video_on) begin
+            red = 0; green = 0; blue = 0;
+        end else begin
+            case (x[9:7]) // Divide screen into 8 vertical bars
+                3'b000: begin red=5'b11111; green=0; blue=0; end // Red
+                3'b001: begin red=0; green=6'b111111; blue=0; end // Green
+                3'b010: begin red=0; green=0; blue=5'b11111; end // Blue
+                3'b011: begin red=5'b11111; green=6'b111111; blue=0; end // Yellow
+                3'b100: begin red=0; green=6'b111111; blue=5'b11111; end // Cyan
+                3'b101: begin red=5'b11111; green=0; blue=5'b11111; end // Magenta
+                3'b110: begin red=5'b11111; green=6'b111111; blue=5'b11111; end // White
+                3'b111: begin red=0; green=0; blue=0; end // Black
+            endcase
+        end
+    end
+endmodule

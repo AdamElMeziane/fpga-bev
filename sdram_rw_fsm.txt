@@ -1,0 +1,123 @@
+module sdram_rw_fsm (
+    input  logic        clk,
+    input  logic        reset_n,
+    input  logic        init_done,
+    input  logic        write_btn,
+    input  logic        read_btn,
+    output logic        pass_led,
+    output logic        write_done_led,
+
+    output logic        cs_n,
+    output logic        ras_n,
+    output logic        cas_n,
+    output logic        we_n,
+    output logic [11:0] addr,
+    output logic [1:0]  ba,
+    output logic        cke,
+
+    input  logic [15:0] dq,
+    output logic        dq_oe,
+    output logic [15:0] dq_out
+);
+
+    localparam logic [11:0] ROW_ADDR   = 12'h123;
+    localparam logic [11:0] COL_ADDR   = 12'h045;
+    localparam logic [15:0] WRITE_DATA = 16'hCAFE;
+
+    typedef enum logic [2:0] {
+        IDLE,
+        ACTIVATE_WRITE,
+        WRITE,
+        ACTIVATE_READ,
+        READ,
+        COMPARE
+    } state_t;
+
+    state_t state, next_state;
+    logic [15:0] read_data;
+
+    always_ff @(posedge clk or negedge reset_n) begin
+        if (!reset_n) begin
+            state <= IDLE;
+            read_data <= 16'h0000;
+        end else begin
+            state <= next_state;
+            if (state == READ)
+                read_data <= dq;
+        end
+    end
+
+    always_comb begin
+        next_state = state;
+        case (state)
+            IDLE: begin
+                if (init_done && write_btn)
+                    next_state = ACTIVATE_WRITE;
+                else if (init_done && read_btn)
+                    next_state = ACTIVATE_READ;
+            end
+            ACTIVATE_WRITE: next_state = WRITE;
+            WRITE:          next_state = IDLE;
+            ACTIVATE_READ:  next_state = READ;
+            READ:           next_state = COMPARE;
+            COMPARE:        next_state = IDLE;
+        endcase
+    end
+
+    always_comb begin
+        cs_n   = 1;
+        ras_n  = 1;
+        cas_n  = 1;
+        we_n   = 1;
+        addr   = 12'd0;
+        ba     = 2'b00;
+        cke    = 1;
+        dq_out = 16'h0000;
+        dq_oe  = 0;
+        pass_led = 1;         // LED off by default (active-low)
+        write_done_led = 1;   // LED off by default
+
+        case (state)
+            ACTIVATE_WRITE: begin
+                cs_n  = 0;
+                ras_n = 0;
+                cas_n = 1;
+                we_n  = 1;
+                addr  = ROW_ADDR;
+                ba    = 2'b00;
+            end
+            WRITE: begin
+                cs_n   = 0;
+                ras_n  = 1;
+                cas_n  = 0;
+                we_n   = 0;
+                addr   = COL_ADDR;
+                ba     = 2'b00;
+                dq_out = WRITE_DATA;
+                dq_oe  = 1;
+                write_done_led = 0;  // active-low LED on
+            end
+            ACTIVATE_READ: begin
+                cs_n  = 0;
+                ras_n = 0;
+                cas_n = 1;
+                we_n  = 1;
+                addr  = ROW_ADDR;
+                ba    = 2'b00;
+            end
+            READ: begin
+                cs_n  = 0;
+                ras_n = 1;
+                cas_n = 0;
+                we_n  = 1;
+                addr  = COL_ADDR;
+                ba    = 2'b00;
+                dq_oe = 0;
+            end
+            COMPARE: begin
+                pass_led = !(read_data == WRITE_DATA);  // active-low LED on if match
+            end
+        endcase
+    end
+
+endmodule

@@ -1,0 +1,91 @@
+module sdram_test_top (
+    input  logic        clk_50MHz,
+    input  logic        reset_n,
+    output logic        test_pass_led,
+    output logic        write_done_led,
+    input  logic [1:0]  buttons,
+
+    // SDRAM interface
+    output logic        cs_n,
+    output logic        ras_n,
+    output logic        cas_n,
+    output logic        we_n,
+    output logic [11:0] addr,
+    output logic [1:0]  bank,
+    output logic        cke,
+    output logic        sclk,
+    output logic        ldqm,
+    output logic        udqm,
+    inout  wire [15:0]  dq
+);
+
+    logic clk_133MHz;
+    logic dq_oe;
+    logic [15:0] dq_out, dq_in;
+
+    pll_133Mhz pll_inst (
+        .inclk0(clk_50MHz),
+        .c0(clk_133MHz)
+    );
+
+    assign dq     = dq_oe ? dq_out : 16'hzz;
+    assign dq_in  = dq;
+
+    assign sclk   = clk_133MHz;
+    assign ldqm   = 1'b0;
+    assign udqm   = 1'b0;
+
+    logic init_done;
+
+    logic        cs_n_init, ras_n_init, cas_n_init, we_n_init;
+    logic [11:0] addr_init;
+    logic [1:0]  ba_init;
+    logic        cke_init;
+
+    logic        cs_n_rw, ras_n_rw, cas_n_rw, we_n_rw;
+    logic [11:0] addr_rw;
+    logic [1:0]  ba_rw;
+    logic        cke_rw;
+
+    assign cs_n  = init_done ? cs_n_rw  : cs_n_init;
+    assign ras_n = init_done ? ras_n_rw : ras_n_init;
+    assign cas_n = init_done ? cas_n_rw : cas_n_init;
+    assign we_n  = init_done ? we_n_rw  : we_n_init;
+    assign addr  = init_done ? addr_rw  : addr_init;
+    assign bank  = init_done ? ba_rw    : ba_init;
+    assign cke   = init_done ? cke_rw   : cke_init;
+
+    sdram_init_fsm u_init (
+        .clk       (clk_133MHz),
+        .reset_n   (reset_n),
+        .init_done (init_done),
+        .cs_n      (cs_n_init),
+        .ras_n     (ras_n_init),
+        .cas_n     (cas_n_init),
+        .we_n      (we_n_init),
+        .addr      (addr_init),
+        .ba        (ba_init),
+        .cke       (cke_init)
+    );
+
+    sdram_rw_fsm u_rw (
+        .clk             (clk_133MHz),
+        .reset_n         (reset_n),
+        .init_done       (init_done),
+        .write_btn       (buttons[0]),
+        .read_btn        (buttons[1]),
+        .pass_led        (test_pass_led),
+        .write_done_led  (write_done_led),
+        .cs_n            (cs_n_rw),
+        .ras_n           (ras_n_rw),
+        .cas_n           (cas_n_rw),
+        .we_n            (we_n_rw),
+        .addr            (addr_rw),
+        .ba              (ba_rw),
+        .cke             (cke_rw),
+        .dq              (dq_in),
+        .dq_oe           (dq_oe),
+        .dq_out          (dq_out)
+    );
+
+endmodule

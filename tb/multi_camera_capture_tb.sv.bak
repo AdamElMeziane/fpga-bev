@@ -1,0 +1,118 @@
+module multi_camera_capture_tb;
+
+    // -------------------------------
+    // 1. Clock and Reset Generation
+    // -------------------------------
+
+    logic clk = 0;
+    always #10 clk = ~clk; // 50 MHz system clock
+
+    logic [3:0] pclk = 4'b0000;
+    always #20 pclk[0] = ~pclk[0]; // All pixel clocks at 25 MHz
+    always #20 pclk[1] = ~pclk[1];
+    always #20 pclk[2] = ~pclk[2];
+    always #20 pclk[3] = ~pclk[3];
+
+    logic rst = 1;
+    initial begin
+        #100 rst = 0; // Hold reset high for 100 ns
+    end
+
+    // -------------------------------
+    // 2. Camera Signal Declarations
+    // -------------------------------
+
+    logic [3:0] vsync = 0;           // Frame start/end signals
+    logic [3:0] href = 0;            // Row valid signals
+    logic [7:0] data [3:0];          // 8-bit data buses for each camera
+
+    // -------------------------------
+    // 3. DUT Outputs
+    // -------------------------------
+
+    logic [15:0] pixel_data [3:0];   // Captured RGB565 pixels
+    logic pixel_valid [3:0];         // Pixel valid flags
+    logic frame_done [3:0];          // Frame complete flags
+
+    // -------------------------------
+    // 4. Instantiate DUT
+    // -------------------------------
+
+    multi_camera_capture dut (
+        .clk(clk),
+        .rst(rst),
+        .pclk(pclk),
+        .vsync(vsync),
+        .href(href),
+        .data(data),
+        .pixel_data(pixel_data),
+        .pixel_valid(pixel_valid),
+        .frame_done(frame_done)
+    );
+
+    // -------------------------------
+    // 5. Dummy Image Data
+    // -------------------------------
+
+    logic [15:0] dummy_image [0:639]; // One row of 640 pixels
+    initial begin
+        for (int i = 0; i < 640; i++) begin
+            dummy_image[i] = 16'hF800 + i; // Red gradient
+        end
+    end
+
+    // -------------------------------
+    // 6. Simulate All Cameras
+    // -------------------------------
+
+    initial begin
+        @(negedge rst); // Wait for reset to deassert
+
+        // Launch 4 camera simulators in parallel
+        for (int cam = 0; cam < 4; cam++) begin
+            int local_cam = cam;
+            fork
+                simulate_camera(local_cam);
+            join_none
+        end
+    end
+
+    // -------------------------------
+    // 7. Camera Simulation Task
+    // -------------------------------
+
+    task simulate_camera(int cam_id);
+        automatic int px = 0;
+
+        // Send VSYNC pulse (start of frame)
+        @(posedge pclk[cam_id]);
+        vsync[cam_id] = 1;
+        repeat (4) @(posedge pclk[cam_id]);
+        vsync[cam_id] = 0;
+
+        // Send 1 row of 640 pixels
+        href[cam_id] = 1;
+        for (int col = 0; col < 640; col++) begin
+            data[cam_id] = dummy_image[col][15:8]; @(posedge pclk[cam_id]); // MSB
+            data[cam_id] = dummy_image[col][7:0];  @(posedge pclk[cam_id]); // LSB
+        end
+        href[cam_id] = 0;
+
+        // Small delay between rows (simulate line gap)
+        repeat (10) @(posedge pclk[cam_id]);
+    endtask
+
+    // -------------------------------
+    // 8. Output Monitoring
+    // -------------------------------
+
+    always @(posedge clk) begin
+        for (int i = 0; i < 4; i++) begin
+            if (pixel_valid[i])
+                $display("Cam %0d: Pixel = %h", i, pixel_data[i]);
+            if (frame_done[i])
+                $display("Cam %0d: Frame done!", i);
+        end
+    end
+
+endmodule

@@ -1,0 +1,12 @@
+module image_rom (
+    input  logic [18:0] addr,       // 640*480 = 307200 → needs 19 bits
+    output logic [2:0] pixel
+);
+
+    logic [2:0] mem [0:307199];
+
+    initial $readmemh("image_3bit.mem", mem);  // Load image data
+
+    assign pixel = mem[addr];
+
+endmodule

@@ -1,0 +1,16 @@
+Fitter Status : Successful - Wed Aug 06 11:05:48 2025
+Quartus Prime Version : 20.1.1 Build 720 11/11/2020 SJ Lite Edition
+Revision Name : pfa_sensor_fusion
+Top-level Entity Name : top_sdram_vga_system
+Family : Cyclone IV E
+Device : EP4CE6E22C8
+Timing Models : Final
+Total logic elements : 2,912 / 6,272 ( 46 % )
+    Total combinational functions : 2,055 / 6,272 ( 33 % )
+    Dedicated logic registers : 1,840 / 6,272 ( 29 % )
+Total registers : 1840
+Total pins : 50 / 92 ( 54 % )
+Total virtual pins : 0
+Total memory bits : 230,400 / 276,480 ( 83 % )
+Embedded Multiplier 9-bit elements : 0 / 30 ( 0 % )
+Total PLLs : 1 / 2 ( 50 % )

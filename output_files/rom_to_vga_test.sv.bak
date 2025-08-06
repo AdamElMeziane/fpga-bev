@@ -1,0 +1,57 @@
+module rom_to_vga (
+    input  logic        clk_50MHz,
+    input  logic        reset_n,
+
+    output logic [0:0]  vga_red,
+    output logic [0:0]  vga_green,
+    output logic [0:0]  vga_blue,
+    output logic        vga_hsync,
+    output logic        vga_vsync
+);
+
+    logic clk_25;
+
+    // Divide 50 MHz to 25 MHz for VGA
+    clock_divider #(.DIVIDE_BY(2)) vga_clk_gen (
+        .clk_in(clk_50MHz),
+        .clk_out(clk_25)
+    );
+
+    logic [9:0] x, y;
+    logic       video_on;
+
+    vga_controller vga_inst (
+        .clk(clk_25),
+        .reset(~reset_n),
+        .hsync(vga_hsync),
+        .vsync(vga_vsync),
+        .video_on(video_on),
+        .x(x),
+        .y(y),
+        .frame_start() // unused
+    );
+
+    localparam IMG_WIDTH  = 320;
+    localparam IMG_HEIGHT = 240;
+    localparam IMG_SIZE   = IMG_WIDTH * IMG_HEIGHT;
+
+    logic [2:0] image_mem [0:IMG_SIZE-1];
+
+    initial begin
+        $readmemb("../assets/image_3bit.mem", image_mem);
+    end
+
+    logic [2:0] pixel;
+
+    always_ff @(posedge clk_25) begin
+        if (video_on && x < IMG_WIDTH && y < IMG_HEIGHT)
+            pixel <= image_mem[y * IMG_WIDTH + x];
+        else
+            pixel <= 3'b000;
+    end
+
+    assign vga_red[0]   = pixel[2];
+    assign vga_green[0] = pixel[1];
+    assign vga_blue[0]  = pixel[0];
+
+endmodule

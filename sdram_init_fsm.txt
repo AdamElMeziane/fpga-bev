@@ -1,0 +1,91 @@
+module sdram_init_fsm (
+    input  logic        clk,
+    input  logic        reset_n,
+    output logic        init_done,
+
+    // SDRAM control signals
+    output logic        cs_n,
+    output logic        ras_n,
+    output logic        cas_n,
+    output logic        we_n,
+    output logic [11:0] addr,
+    output logic [1:0]  ba,
+    output logic        cke
+);
+
+// FSM states
+typedef enum logic [2:0] {
+    IDLE,
+    WAIT_100US,
+    PRECHARGE,
+    LOAD_MODE,
+    TMRD_WAIT,
+    DONE
+} state_t;
+
+// wait 100us as per documentation
+localparam int T_100US_CYCLES = 13300;
+logic [13:0] wait_counter;
+
+// FSM logic
+state_t state, next_state;
+
+always_ff @(posedge clk or negedge reset_n) begin
+    if (!reset_n) begin
+        state <= IDLE;
+        wait_counter <= 0;
+    end else begin
+        state <= next_state;
+        if (state == WAIT_100US || state == TMRD_WAIT)
+            wait_counter <= wait_counter + 1;
+        else
+            wait_counter <= 0;
+    end
+end
+
+// next state
+always_comb begin
+    next_state = state;
+    case (state)
+        IDLE:         next_state = WAIT_100US;
+        WAIT_100US:   if (wait_counter == T_100US_CYCLES) next_state = PRECHARGE;
+        PRECHARGE:    next_state = LOAD_MODE;
+        LOAD_MODE:    next_state = TMRD_WAIT;
+        TMRD_WAIT:    if (wait_counter == 2) next_state = DONE;
+        DONE:         next_state = DONE;
+    endcase
+end
+
+// output logic
+always_comb begin
+    // Default NOP
+    cs_n   = 1;
+    ras_n  = 1;
+    cas_n  = 1;
+    we_n   = 1;
+    addr   = 12'd0;
+    ba     = 2'b00;
+    cke    = 1;
+    init_done = 0;
+
+    case (state)
+        PRECHARGE: begin
+            cs_n  = 0;
+            ras_n = 0;
+            cas_n = 1;
+            we_n  = 0;
+            addr[10] = 1; // A10 = 1 → precharge all banks
+        end
+        LOAD_MODE: begin
+            cs_n  = 0;
+            ras_n = 0;
+            cas_n = 0;
+            we_n  = 0;
+            addr = 12'b0000_010_0000_0; // A11:A0
+        end
+        DONE: begin
+            init_done = 1;
+        end
+    endcase
+end
+endmodule

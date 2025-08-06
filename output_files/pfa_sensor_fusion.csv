@@ -1,0 +1,73 @@
+# Copyright (C) 2020  Intel Corporation. All rights reserved.
+# Your use of Intel Corporation's design tools, logic functions 
+# and other software and tools, and any partner logic 
+# functions, and any output files from any of the foregoing 
+# (including device programming or simulation files), and any 
+# associated documentation or information are expressly subject 
+# to the terms and conditions of the Intel Program License 
+# Subscription Agreement, the Intel Quartus Prime License Agreement,
+# the Intel FPGA IP License Agreement, or other applicable license
+# agreement, including, without limitation, that your use is for
+# the sole purpose of programming logic devices manufactured by
+# Intel and sold by Intel or its authorized distributors.  Please
+# refer to the applicable agreement for further details, at
+# https://fpgasoftware.intel.com/eula.
+
+# Quartus Prime Version 20.1.1 Build 720 11/11/2020 SJ Lite Edition
+# File: C:\Users\aelmezia\Desktop\PFA 1\Project\output_files\pfa_sensor_fusion.csv
+# Generated on: Tue Aug 05 12:13:14 2025
+
+# Note: The column header names should not be changed if you wish to import this .csv file into the Quartus Prime software.
+
+To,Direction,Location,I/O Bank,VREF Group,I/O Standard,Reserved,Current Strength,Slew Rate,Differential Pair,Strict Preservation
+clk_50MHz,Input,PIN_23,1,B1_N0,,,,,,
+reset_n,Input,,,,,,,,,
+vga_blue[0],Output,PIN_104,6,B6_N0,,,,,,
+vga_green[0],Output,PIN_105,6,B6_N0,,,,,,
+vga_hsync,Output,PIN_101,6,B6_N0,,,,,,
+vga_red[0],Output,PIN_106,6,B6_N0,,,,,,
+vga_vsync,Output,PIN_103,6,B6_N0,,,,,,
+buttons[0],Unknown,PIN_88,5,B5_N0,,,,,,
+buttons[1],Unknown,PIN_91,6,B6_N0,,,,,,
+addr[0],Unknown,PIN_76,5,B5_N0,,,,,,
+addr[1],Unknown,PIN_77,5,B5_N0,,,,,,
+addr[2],Unknown,PIN_80,5,B5_N0,,,,,,
+addr[3],Unknown,PIN_83,5,B5_N0,,,,,,
+addr[4],Unknown,PIN_68,4,B4_N0,,,,,,
+addr[5],Unknown,PIN_67,4,B4_N0,,,,,,
+addr[6],Unknown,PIN_66,4,B4_N0,,,,,,
+addr[7],Unknown,PIN_65,4,B4_N0,,,,,,
+addr[8],Unknown,PIN_64,4,B4_N0,,,,,,
+addr[9],Unknown,PIN_60,4,B4_N0,,,,,,
+addr[10],Unknown,PIN_75,5,B5_N0,,,,,,
+addr[11],Unknown,PIN_59,4,B4_N0,,,,,,
+bank[0],Unknown,PIN_73,5,B5_N0,,,,,,
+bank[1],Unknown,PIN_74,5,B5_N0,,,,,,
+cs_n,Unknown,PIN_72,4,B4_N0,,,,,,
+cas_n,Unknown,PIN_70,4,B4_N0,,,,,,
+ras_n,Unknown,PIN_71,4,B4_N0,,,,,,
+we_n,Unknown,PIN_69,4,B4_N0,,,,,,
+cke,Unknown,PIN_58,4,B4_N0,,,,,,
+sclk,Unknown,PIN_43,3,B3_N0,,,,,,
+ldqm,Unknown,PIN_42,3,B3_N0,,,,,,
+udqm,Unknown,PIN_55,4,B4_N0,,,,,,
+dq[0],Unknown,PIN_28,2,B2_N0,,,,,,
+dq[1],Unknown,PIN_30,2,B2_N0,,,,,,
+dq[2],Unknown,PIN_31,2,B2_N0,,,,,,
+dq[3],Unknown,PIN_32,2,B2_N0,,,,,,
+dq[4],Unknown,PIN_33,2,B2_N0,,,,,,
+dq[5],Unknown,PIN_34,2,B2_N0,,,,,,
+dq[6],Unknown,PIN_38,3,B3_N0,,,,,,
+dq[7],Unknown,PIN_39,3,B3_N0,,,,,,
+dq[8],Unknown,PIN_54,4,B4_N0,,,,,,
+dq[9],Unknown,PIN_53,3,B3_N0,,,,,,
+dq[10],Unknown,PIN_52,3,B3_N0,,,,,,
+dq[11],Unknown,PIN_51,3,B3_N0,,,,,,
+dq[12],Unknown,PIN_50,3,B3_N0,,,,,,
+dq[13],Unknown,PIN_49,3,B3_N0,,,,,,
+dq[14],Unknown,PIN_46,3,B3_N0,,,,,,
+dq[15],Unknown,PIN_44,3,B3_N0,,,,,,
+test_pass_led,Unknown,PIN_84,5,B5_N0,,,,,,
+write_done_led,Unknown,PIN_86,5,B5_N0,,,,,,
+init_led,Unknown,PIN_87,5,B5_N0,,,,,,
+read_done_led,Unknown,PIN_85,5,B5_N0,,,,,,
