@@ -2,7 +2,7 @@
 // Adapted from EP4CE6 project for VGA display
 
 module fifo_buffer #(
-    parameter ADDR_WIDTH = 8,  // 256 entries for line buffer
+    parameter ADDR_WIDTH = 11,  // 2048 entries for line buffer
     parameter DATA_WIDTH = 16
 )(
     input  logic rst_n,

@@ -1,6 +1,6 @@
 Flow report for pfa_sensor_fusion
-Wed Aug 06 11:06:16 2025
-Quartus Prime Version 20.1.1 Build 720 11/11/2020 SJ Lite Edition
+Tue Aug 12 15:57:53 2025
+Quartus Prime Version 18.1.0 Build 625 09/12/2018 SJ Standard Edition
 
 
 ---------------------
@@ -21,9 +21,9 @@ Quartus Prime Version 20.1.1 Build 720 11/11/2020 SJ Lite Edition
 ----------------
 ; Legal Notice ;
 ----------------
-Copyright (C) 2020  Intel Corporation. All rights reserved.
+Copyright (C) 2018  Intel Corporation. All rights reserved.
 Your use of Intel Corporation's design tools, logic functions 
-and other software and tools, and any partner logic 
+and other software and tools, and its AMPP partner logic 
 functions, and any output files from any of the foregoing 
 (including device programming or simulation files), and any 
 associated documentation or information are expressly subject 
@@ -33,31 +33,30 @@ the Intel FPGA IP License Agreement, or other applicable license
 agreement, including, without limitation, that your use is for
 the sole purpose of programming logic devices manufactured by
 Intel and sold by Intel or its authorized distributors.  Please
-refer to the applicable agreement for further details, at
-https://fpgasoftware.intel.com/eula.
+refer to the applicable agreement for further details.
 
 
 
-+----------------------------------------------------------------------------------+
-; Flow Summary                                                                     ;
-+------------------------------------+---------------------------------------------+
-; Flow Status                        ; Successful - Wed Aug 06 11:06:16 2025       ;
-; Quartus Prime Version              ; 20.1.1 Build 720 11/11/2020 SJ Lite Edition ;
-; Revision Name                      ; pfa_sensor_fusion                           ;
-; Top-level Entity Name              ; top_sdram_vga_system                        ;
-; Family                             ; Cyclone IV E                                ;
-; Device                             ; EP4CE6E22C8                                 ;
-; Timing Models                      ; Final                                       ;
-; Total logic elements               ; 2,912 / 6,272 ( 46 % )                      ;
-;     Total combinational functions  ; 2,055 / 6,272 ( 33 % )                      ;
-;     Dedicated logic registers      ; 1,840 / 6,272 ( 29 % )                      ;
-; Total registers                    ; 1840                                        ;
-; Total pins                         ; 50 / 92 ( 54 % )                            ;
-; Total virtual pins                 ; 0                                           ;
-; Total memory bits                  ; 230,400 / 276,480 ( 83 % )                  ;
-; Embedded Multiplier 9-bit elements ; 0 / 30 ( 0 % )                              ;
-; Total PLLs                         ; 1 / 2 ( 50 % )                              ;
-+------------------------------------+---------------------------------------------+
++--------------------------------------------------------------------------------------+
+; Flow Summary                                                                         ;
++------------------------------------+-------------------------------------------------+
+; Flow Status                        ; Successful - Tue Aug 12 15:57:50 2025           ;
+; Quartus Prime Version              ; 18.1.0 Build 625 09/12/2018 SJ Standard Edition ;
+; Revision Name                      ; pfa_sensor_fusion                               ;
+; Top-level Entity Name              ; top_sdram_vga_system                            ;
+; Family                             ; Cyclone IV E                                    ;
+; Device                             ; EP4CE6E22C8                                     ;
+; Timing Models                      ; Final                                           ;
+; Total logic elements               ; 2,990 / 6,272 ( 48 % )                          ;
+;     Total combinational functions  ; 2,133 / 6,272 ( 34 % )                          ;
+;     Dedicated logic registers      ; 1,889 / 6,272 ( 30 % )                          ;
+; Total registers                    ; 1889                                            ;
+; Total pins                         ; 50 / 92 ( 54 % )                                ;
+; Total virtual pins                 ; 0                                               ;
+; Total memory bits                  ; 230,400 / 276,480 ( 83 % )                      ;
+; Embedded Multiplier 9-bit elements ; 0 / 30 ( 0 % )                                  ;
+; Total PLLs                         ; 1 / 2 ( 50 % )                                  ;
++------------------------------------+-------------------------------------------------+
 
 
 +-----------------------------------------+
@@ -65,7 +64,7 @@ https://fpgasoftware.intel.com/eula.
 +-------------------+---------------------+
 ; Option            ; Setting             ;
 +-------------------+---------------------+
-; Start date & time ; 08/06/2025 11:03:40 ;
+; Start date & time ; 08/12/2025 15:57:14 ;
 ; Main task         ; Compilation         ;
 ; Revision Name     ; pfa_sensor_fusion   ;
 +-------------------+---------------------+
@@ -76,7 +75,7 @@ https://fpgasoftware.intel.com/eula.
 +-------------------------------------+----------------------------------------+-------------------+----------------------+------------+
 ; Assignment Name                     ; Value                                  ; Default Value     ; Entity Name          ; Section Id ;
 +-------------------------------------+----------------------------------------+-------------------+----------------------+------------+
-; COMPILER_SIGNATURE_ID               ; 48437151132550.175447461909848         ; --                ; --                   ; --         ;
+; COMPILER_SIGNATURE_ID               ; 2542817210397.175501063417504          ; --                ; --                   ; --         ;
 ; MAX_CORE_JUNCTION_TEMP              ; 85                                     ; --                ; --                   ; --         ;
 ; MIN_CORE_JUNCTION_TEMP              ; 0                                      ; --                ; --                   ; --         ;
 ; NOMINAL_CORE_SUPPLY_VOLTAGE         ; 1.2V                                   ; --                ; --                   ; --         ;
@@ -95,11 +94,11 @@ https://fpgasoftware.intel.com/eula.
 +----------------------+--------------+-------------------------+---------------------+------------------------------------+
 ; Module Name          ; Elapsed Time ; Average Processors Used ; Peak Virtual Memory ; Total CPU Time (on all processors) ;
 +----------------------+--------------+-------------------------+---------------------+------------------------------------+
-; Analysis & Synthesis ; 00:00:42     ; 1.0                     ; 4821 MB             ; 00:01:03                           ;
-; Fitter               ; 00:01:22     ; 1.1                     ; 5552 MB             ; 00:01:57                           ;
-; Assembler            ; 00:00:02     ; 1.0                     ; 4702 MB             ; 00:00:02                           ;
-; Timing Analyzer      ; 00:00:08     ; 1.2                     ; 4802 MB             ; 00:00:08                           ;
-; Total                ; 00:02:14     ; --                      ; --                  ; 00:03:10                           ;
+; Analysis & Synthesis ; 00:00:12     ; 1.0                     ; 4852 MB             ; 00:00:20                           ;
+; Fitter               ; 00:00:20     ; 1.3                     ; 6172 MB             ; 00:00:37                           ;
+; Assembler            ; 00:00:01     ; 1.0                     ; 4686 MB             ; 00:00:01                           ;
+; Timing Analyzer      ; 00:00:02     ; 1.6                     ; 4892 MB             ; 00:00:03                           ;
+; Total                ; 00:00:35     ; --                      ; --                  ; 00:01:01                           ;
 +----------------------+--------------+-------------------------+---------------------+------------------------------------+
 
 
@@ -108,10 +107,10 @@ https://fpgasoftware.intel.com/eula.
 +----------------------+------------------+------------+------------+----------------+
 ; Module Name          ; Machine Hostname ; OS Name    ; OS Version ; Processor type ;
 +----------------------+------------------+------------+------------+----------------+
-; Analysis & Synthesis ; LMA-5CG2076MGT   ; Windows 10 ; 10.0       ; x86_64         ;
-; Fitter               ; LMA-5CG2076MGT   ; Windows 10 ; 10.0       ; x86_64         ;
-; Assembler            ; LMA-5CG2076MGT   ; Windows 10 ; 10.0       ; x86_64         ;
-; Timing Analyzer      ; LMA-5CG2076MGT   ; Windows 10 ; 10.0       ; x86_64         ;
+; Analysis & Synthesis ; DESKTOP-BG4OATS  ; Windows 10 ; 10.0       ; x86_64         ;
+; Fitter               ; DESKTOP-BG4OATS  ; Windows 10 ; 10.0       ; x86_64         ;
+; Assembler            ; DESKTOP-BG4OATS  ; Windows 10 ; 10.0       ; x86_64         ;
+; Timing Analyzer      ; DESKTOP-BG4OATS  ; Windows 10 ; 10.0       ; x86_64         ;
 +----------------------+------------------+------------+------------+----------------+
 
 
@@ -122,7 +121,6 @@ quartus_map --read_settings_files=on --write_settings_files=off pfa_sensor_fusio
 quartus_fit --read_settings_files=off --write_settings_files=off pfa_sensor_fusion -c pfa_sensor_fusion
 quartus_asm --read_settings_files=off --write_settings_files=off pfa_sensor_fusion -c pfa_sensor_fusion
 quartus_sta pfa_sensor_fusion -c pfa_sensor_fusion
-quartus_eda --read_settings_files=on --write_settings_files=off pfa_sensor_fusion -c pfa_sensor_fusion
 
 
 
