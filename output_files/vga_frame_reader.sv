@@ -12,6 +12,7 @@ module vga_frame_reader #(
     input  logic sdram_rx_enable,   // SDRAM provides data
     input  logic [DATA_WIDTH-1:0] sdram_data,
     output logic enable_read_mode,
+    output logic [21:0] sdram_read_addr,  // CRITICAL: Added SDRAM address output
     
     // VGA timing inputs
     input  logic frame_start,
@@ -30,7 +31,6 @@ module vga_frame_reader #(
 );
 
     localparam IMG_SIZE = IMG_WIDTH * IMG_HEIGHT;
-    localparam FIFO_SIZE = 2048;  // Match your FIFO size
     
     // Frame reading FSM
     typedef enum logic [2:0] {
@@ -44,38 +44,11 @@ module vga_frame_reader #(
     
     read_state_t state, next_state;
     
-    // Pixel and line tracking
+    // Pixel tracking - simplified
     logic [17:0] pixels_read_reg, pixels_read_next;
-    logic [9:0] current_line, current_line_next;
-    logic [9:0] pixels_in_line, pixels_in_line_next;
     logic reading_active;
     logic frame_start_sync, frame_start_prev;
     logic sdram_ready_latched;
-    
-    // Track VGA consumption (synchronized to SDRAM clock)
-    logic [9:0] vga_y_sync1, vga_y_sync2;
-    logic [9:0] last_vga_line;
-    logic vga_needs_data;
-    
-    // Synchronize VGA Y position to SDRAM clock
-    always_ff @(posedge clk_sdram or negedge rst_n) begin
-        if (!rst_n) begin
-            vga_y_sync1 <= 10'd0;
-            vga_y_sync2 <= 10'd0;
-            last_vga_line <= 10'd0;
-        end else begin
-            vga_y_sync1 <= vga_y;
-            vga_y_sync2 <= vga_y_sync1;
-            // Track when VGA moves to a new line
-            if (vga_y_sync2 != last_vga_line && vga_y_sync2 < IMG_HEIGHT) begin
-                last_vga_line <= vga_y_sync2;
-            end
-        end
-    end
-    
-    // Calculate if VGA needs more data (don't get too far ahead)
-    // We want to stay at most 2-3 lines ahead of VGA
-    assign vga_needs_data = (current_line <= last_vga_line + 3);
     
     // Latch sdram_ready signal
     always_ff @(posedge clk_sdram or negedge rst_n) begin
@@ -146,43 +119,26 @@ module vga_frame_reader #(
         endcase
     end
     
-    // Pixel and line counter logic
+    // Pixel counter logic - SIMPLIFIED
     always_comb begin
         pixels_read_next = pixels_read_reg;
-        current_line_next = current_line;
-        pixels_in_line_next = pixels_in_line;
         
         case (state)
             IDLE, WAIT_READY, START_READ: begin
                 pixels_read_next = 18'd0;
-                current_line_next = 10'd0;
-                pixels_in_line_next = 10'd0;
             end
             
             READING: begin
-                // Only write when:
-                // 1. SDRAM has data
-                // 2. FIFO has space (preferably at least one line worth)
-                // 3. VGA needs more data (not too far ahead)
-                if (sdram_rx_enable && !fifo_full && vga_needs_data) begin
+                // Only increment when SDRAM provides data and FIFO has space
+                if (sdram_rx_enable && !fifo_full) begin
                     if (pixels_read_reg < IMG_SIZE - 1) begin
                         pixels_read_next = pixels_read_reg + 1;
-                        
-                        // Track line position
-                        if (pixels_in_line == IMG_WIDTH - 1) begin
-                            pixels_in_line_next = 10'd0;
-                            current_line_next = current_line + 1;
-                        end else begin
-                            pixels_in_line_next = pixels_in_line + 1;
-                        end
                     end
                 end
             end
             
             default: begin
                 pixels_read_next = pixels_read_reg;
-                current_line_next = current_line;
-                pixels_in_line_next = pixels_in_line;
             end
         endcase
     end
@@ -220,23 +176,27 @@ module vga_frame_reader #(
         endcase
     end
     
-    // FIFO write logic - only write valid data when not too far ahead
-    assign fifo_write_enable = sdram_rx_enable && reading_active && 
-                              !fifo_full && vga_needs_data;
+    // CRITICAL: Output the current pixel address to SDRAM
+    assign sdram_read_addr = {4'd0, pixels_read_reg};  // Pad to 22 bits if needed
+    
+    // FIFO write logic - simplified, no complex line tracking
+    assign fifo_write_enable = sdram_rx_enable && reading_active && !fifo_full;
+    
+    // Choose data source for debugging
+    // Normal operation:
     assign fifo_write_data = sdram_data;
+    
+    // For debugging - uncomment to use test pattern instead:
+    // assign fifo_write_data = {13'd0, pixels_read_reg[2:0]};  // 8-color test pattern
     
     // Registers
     always_ff @(posedge clk_sdram or negedge rst_n) begin
         if (!rst_n) begin
             state <= IDLE;
             pixels_read_reg <= 18'd0;
-            current_line <= 10'd0;
-            pixels_in_line <= 10'd0;
         end else begin
             state <= next_state;
             pixels_read_reg <= pixels_read_next;
-            current_line <= current_line_next;
-            pixels_in_line <= pixels_in_line_next;
         end
     end
 

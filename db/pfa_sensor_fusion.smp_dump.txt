@@ -17,12 +17,20 @@ state.FRAME_COMPLETE 0 1 0 0 0 1
 state.WAIT_NEXT_FRAME 1 0 0 0 0 1 
 
 State Machine - |top_sdram_vga_system|image_loader:img_loader|state
-Name state.IDLE state.COMPLETE state.LOADING 
-state.IDLE 0 0 0 
-state.LOADING 1 0 1 
-state.COMPLETE 1 1 0 
+Name state.WAIT_WRITE state.LOAD_PIXEL state.WAIT_SDRAM state.IDLE state.CHECK_DONE 
+state.IDLE 0 0 0 0 0 
+state.WAIT_SDRAM 0 0 1 1 0 
+state.LOAD_PIXEL 0 1 0 1 0 
+state.WAIT_WRITE 1 0 0 1 0 
+state.CHECK_DONE 0 0 0 1 1 
 
-State Machine - |top_sdram_vga_system|sdram_controller:sdram_ctrl|old_state_reg
+State Machine - |top_sdram_vga_system|sdram_controller_wrapper:sdram_wrapper|state
+Name state.IDLE state.READING state.WRITING 
+state.IDLE 0 0 0 
+state.WRITING 1 0 1 
+state.READING 1 1 0 
+
+State Machine - |top_sdram_vga_system|sdram_controller_wrapper:sdram_wrapper|sdram_controller:sdram_ctrl|old_state_reg
 Name old_state_reg.ST_BURST_STOP old_state_reg.ST_READ old_state_reg.ST_WRITE old_state_reg.ST_ACTIVE old_state_reg.ST_OPERATE old_state_reg.ST_SET_MODE_REG old_state_reg.ST_AUTO_REFRESH old_state_reg.ST_PRECHARGE old_state_reg.ST_POWER_UP old_state_reg.ST_NOP 
 old_state_reg.ST_NOP 0 0 0 0 0 0 0 0 0 0 
 old_state_reg.ST_POWER_UP 0 0 0 0 0 0 0 0 1 1 
@@ -35,7 +43,7 @@ old_state_reg.ST_WRITE 0 0 1 0 0 0 0 0 0 1
 old_state_reg.ST_READ 0 1 0 0 0 0 0 0 0 1 
 old_state_reg.ST_BURST_STOP 1 0 0 0 0 0 0 0 0 1 
 
-State Machine - |top_sdram_vga_system|sdram_controller:sdram_ctrl|state
+State Machine - |top_sdram_vga_system|sdram_controller_wrapper:sdram_wrapper|sdram_controller:sdram_ctrl|state
 Name state.ST_BURST_STOP state.ST_READ state.ST_WRITE state.ST_ACTIVE state.ST_OPERATE state.ST_SET_MODE_REG state.ST_AUTO_REFRESH state.ST_PRECHARGE state.ST_POWER_UP state.ST_NOP 
 state.ST_NOP 0 0 0 0 0 0 0 0 0 0 
 state.ST_POWER_UP 0 0 0 0 0 0 0 0 1 1 

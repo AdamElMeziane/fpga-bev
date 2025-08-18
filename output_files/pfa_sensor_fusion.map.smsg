@@ -1,1 +1,1 @@
-Info (10281): Verilog HDL Declaration information at rom_to_sdram_writer.sv(5): object "done" differs only in case from object "DONE" in the same scope File: C:/Users/aelmezia/Desktop/PFA 1/Project/src/rom_to_sdram_writer.sv Line: 5
+Warning (10273): Verilog HDL warning at sdram_controller_wrapper.sv(430): extended using "x" or "z" File: C:/epsilon/5tudies/AIAC/Stages/Cap PFA 2A/Project/fpga-bev/fpga-bev/output_files/sdram_controller_wrapper.sv Line: 430

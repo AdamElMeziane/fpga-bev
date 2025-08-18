@@ -1,7 +1,3 @@
-// Complete SDRAM-VGA Display System - FIXED VERSION
-// Proper initialization sequencing and button handling
-// Displays 320x240 image from ROM via SDRAM buffering
-
 module top_sdram_vga_system (
     input  logic        clk_50MHz,
     input  logic        reset_n,
@@ -43,7 +39,7 @@ module top_sdram_vga_system (
         .locked(pll_locked)
     );
 
-    // Generate 25MHz VGA clock (exactly like your working version)
+    // Generate 25MHz VGA clock
     logic clk_div = 0;
     always_ff @(posedge clk_50MHz)
         clk_div <= ~clk_div;
@@ -71,25 +67,16 @@ module top_sdram_vga_system (
     //========================================================================
     logic start_sync1, start_sync2, start_sync3;
     logic button_pressed_pulse;
-    logic button_was_pressed;
     
     always_ff @(posedge clk_133 or negedge reset_sync_133) begin
         if (!reset_sync_133) begin
-            start_sync1 <= 1'b1;  // Default high (not pressed)
+            start_sync1 <= 1'b1;
             start_sync2 <= 1'b1;
             start_sync3 <= 1'b1;
-            button_was_pressed <= 1'b0;
         end else begin
             start_sync1 <= start_button;
             start_sync2 <= start_sync1;
             start_sync3 <= start_sync2;
-            
-            // Detect falling edge (button press) for active-low button
-            if (!start_sync2 && start_sync3) begin
-                button_was_pressed <= 1'b1;
-            end else if (button_was_pressed && loader_loading_complete) begin
-                button_was_pressed <= 1'b0;
-            end
         end
     end
     
@@ -97,7 +84,7 @@ module top_sdram_vga_system (
     assign button_pressed_pulse = !start_sync2 && start_sync3;
 
     //========================================================================
-    // System State Machine for proper sequencing
+    // System State Machine
     //========================================================================
     typedef enum logic [2:0] {
         SYS_WAIT_INIT,
@@ -109,23 +96,13 @@ module top_sdram_vga_system (
     
     sys_state_t sys_state, sys_next_state;
     logic sdram_init_done;
-    logic [23:0] timeout_counter;
+    logic loader_loading_complete;
     
     always_ff @(posedge clk_133 or negedge reset_sync_133) begin
         if (!reset_sync_133) begin
             sys_state <= SYS_WAIT_INIT;
-            timeout_counter <= '0;
         end else begin
             sys_state <= sys_next_state;
-            
-            // Timeout counter for debugging
-            if (sys_state == SYS_WAIT_INIT) begin
-                if (timeout_counter < 24'hFFFFFF) begin
-                    timeout_counter <= timeout_counter + 1;
-                end
-            end else begin
-                timeout_counter <= '0;
-            end
         end
     end
     
@@ -135,13 +112,11 @@ module top_sdram_vga_system (
             SYS_WAIT_INIT: begin
                 if (sdram_init_done) begin
                     sys_next_state = SYS_WAIT_BUTTON;
-                end else if (timeout_counter == 24'hFFFFFF) begin
-                    sys_next_state = SYS_ERROR;  // Timeout - SDRAM init failed
                 end
             end
             
             SYS_WAIT_BUTTON: begin
-                if (button_pressed_pulse || button_was_pressed) begin
+                if (button_pressed_pulse) begin
                     sys_next_state = SYS_LOADING;
                 end
             end
@@ -153,7 +128,7 @@ module top_sdram_vga_system (
             end
             
             SYS_DISPLAYING: begin
-                // Stay here
+                // Stay here - continuously display
             end
             
             SYS_ERROR: begin
@@ -163,27 +138,44 @@ module top_sdram_vga_system (
     end
 
     //========================================================================
-    // SDRAM Controller Signals
+    // Image ROM
     //========================================================================
-    logic sdram_start;
-    logic sdram_enable_write_mode, sdram_enable_read_mode;
-    logic [15:0] sdram_incoming_data, sdram_outgoing_data;
-    logic sdram_enable_transmitter, sdram_enable_receiver;
+    logic [17:0] rom_addr;
+    logic [2:0] rom_pixel;
+    
+    image_rom img_rom (
+        .clk(clk_133),
+        .addr(rom_addr),
+        .pixel(rom_pixel)
+    );
 
-    // Start SDRAM when PLL is locked
-    assign sdram_start = pll_locked;
-
-    sdram_controller sdram_ctrl (
+    //========================================================================
+    // SDRAM Controller Wrapper with External Addressing
+    //========================================================================
+    logic sdram_write_enable, sdram_write_ready;
+    logic sdram_read_enable, sdram_read_valid;
+    logic [17:0] sdram_write_addr, sdram_read_addr;
+    logic [15:0] sdram_write_data, sdram_read_data;
+    
+    sdram_controller_wrapper sdram_wrapper (
         .rst_n(reset_sync_133),
         .clk(clk_133),
-        .start(sdram_start),
-        .enable_write_mode(sdram_enable_write_mode),
-        .enable_read_mode(sdram_enable_read_mode),
-        .incoming_data(sdram_incoming_data),
-        .outgoing_data(sdram_outgoing_data),
-        .enable_transmitter(sdram_enable_transmitter),
-        .enable_receiver(sdram_enable_receiver),
-        .sdram_init_done(sdram_init_done),  // NEW: Get init status
+        .start(pll_locked),
+        .sdram_init_done(sdram_init_done),
+        
+        // Write interface
+        .write_enable(sdram_write_enable),
+        .write_addr(sdram_write_addr),
+        .write_data(sdram_write_data),
+        .write_ready(sdram_write_ready),
+        
+        // Read interface
+        .read_enable(sdram_read_enable),
+        .read_addr(sdram_read_addr),
+        .read_data(sdram_read_data),
+        .read_valid(sdram_read_valid),
+        
+        // SDRAM pins
         .dq(dq),
         .sclk(sclk),
         .cke(cke),
@@ -200,11 +192,11 @@ module top_sdram_vga_system (
     //========================================================================
     // Image Loader (ROM to SDRAM)
     //========================================================================
-    logic loader_loading_complete;
-    logic loader_enable_write;
     logic loader_start;
+    logic [17:0] loader_sdram_addr;
+    logic loader_write_enable;
+    logic [15:0] loader_write_data;
     
-    // Start loading when in LOADING state
     assign loader_start = (sys_state == SYS_LOADING);
 
     image_loader #(
@@ -215,20 +207,22 @@ module top_sdram_vga_system (
         .rst_n(reset_sync_133),
         .clk(clk_133),
         .start_loading(loader_start),
-        .sdram_ready(1'b1),  // Always ready once we're in LOADING state
-        .sdram_tx_enable(sdram_enable_transmitter),
-        .pixel_data(sdram_incoming_data),
-        .enable_write_mode(loader_enable_write),
+        .sdram_ready(sdram_init_done),
+        .sdram_tx_enable(sdram_write_ready),
+        .rom_addr(rom_addr),
+        .rom_pixel(rom_pixel),
+        .pixel_data(loader_write_data),
+        .enable_write_mode(loader_write_enable),
         .loading_complete(loader_loading_complete)
     );
 
     //========================================================================
-    // VGA Timing Generator with FIFO interface
+    // VGA Display Controller
     //========================================================================
     logic vga_video_on, vga_frame_start;
     logic [9:0] vga_x, vga_y;
     logic fifo_read_enable;
-    logic [15:0] fifo_read_data;
+    logic [2:0] fifo_read_data;
     logic fifo_empty, fifo_half_full;
     logic [2:0] vga_rgb;
 
@@ -255,12 +249,12 @@ module top_sdram_vga_system (
     // FIFO Buffer (Clock Domain Crossing)
     //========================================================================
     logic fifo_write_enable;
-    logic [15:0] fifo_write_data;
+    logic [2:0] fifo_write_data;
     logic fifo_full;
 
     fifo_buffer #(
-        .ADDR_WIDTH(9),    // 512 entries for good buffering
-        .DATA_WIDTH(16)
+        .ADDR_WIDTH(7),     // 128 entries (much smaller!)
+        .DATA_WIDTH(3)      // 3-bit pixels
     ) pixel_fifo (
         .rst_n(reset_sync_133 & reset_sync_25),
         .clk_write(clk_133),
@@ -277,11 +271,11 @@ module top_sdram_vga_system (
     //========================================================================
     // VGA Frame Reader (SDRAM to FIFO)
     //========================================================================
-    logic reader_enable_read_mode;
+    logic reader_enable_read;
+    logic [17:0] reader_sdram_addr;
     logic reader_frame_ready;
     logic reader_start;
     
-    // Enable reading when displaying
     assign reader_start = (sys_state == SYS_DISPLAYING);
 
     vga_frame_reader #(
@@ -292,14 +286,12 @@ module top_sdram_vga_system (
         .rst_n(reset_sync_133),
         .clk_sdram(clk_133),
         .clk_vga(clk_25),
-        .sdram_ready(reader_start),  // Start reading when in DISPLAYING state
-        .sdram_rx_enable(sdram_enable_receiver),
-        .sdram_data(sdram_outgoing_data),
-        .enable_read_mode(reader_enable_read_mode),
+        .sdram_ready(reader_start),
+        .sdram_rx_enable(sdram_read_valid),
+        .sdram_data(sdram_read_data),
+        .enable_read_mode(reader_enable_read),
+        .sdram_read_addr(reader_sdram_addr),
         .frame_start(vga_frame_start),
-        .video_on(vga_video_on),
-        .vga_x(vga_x),  
-        .vga_y(vga_y),
         .fifo_write_enable(fifo_write_enable),
         .fifo_write_data(fifo_write_data),
         .fifo_full(fifo_full),
@@ -308,21 +300,28 @@ module top_sdram_vga_system (
     );
 
     //========================================================================
-    // Control Logic with proper arbitration
+    // SDRAM Access Arbitration
     //========================================================================
-    
-    // SDRAM mode control - ensure only one mode active at a time
     always_comb begin
-        sdram_enable_write_mode = 1'b0;
-        sdram_enable_read_mode = 1'b0;
+        // Default values
+        sdram_write_enable = 1'b0;
+        sdram_write_addr = 18'd0;
+        sdram_write_data = 16'd0;
+        sdram_read_enable = 1'b0;
+        sdram_read_addr = 18'd0;
         
         case (sys_state)
             SYS_LOADING: begin
-                sdram_enable_write_mode = loader_enable_write;
+                // Loader has priority
+                sdram_write_enable = loader_write_enable;
+                sdram_write_addr = loader_sdram_addr;
+                sdram_write_data = loader_write_data;
             end
             
             SYS_DISPLAYING: begin
-                sdram_enable_read_mode = reader_enable_read_mode;
+                // Reader has priority
+                sdram_read_enable = reader_enable_read;
+                sdram_read_addr = reader_sdram_addr;
             end
             
             default: begin
@@ -339,16 +338,16 @@ module top_sdram_vga_system (
     assign vga_blue[0]  = vga_rgb[0];
 
     //========================================================================
-    // Status LEDs for Debugging (ACTIVE-LOW LEDs)
+    // Status LEDs for Debugging
     //========================================================================
     always_comb begin
         case (sys_state)
-            SYS_WAIT_INIT:   status_leds = 4'b1110;  // LED0 on: waiting for init
-            SYS_WAIT_BUTTON: status_leds = 4'b1101;  // LED1 on: waiting for button
-            SYS_LOADING:     status_leds = 4'b1011;  // LED2 on: loading
-            SYS_DISPLAYING:  status_leds = 4'b0111;  // LED3 on: displaying
-            SYS_ERROR:       status_leds = 4'b0000;  // All LEDs on: error
-            default:         status_leds = 4'b1111;  // All LEDs off
+            SYS_WAIT_INIT:   status_leds = 4'b1110;  // LED0 on
+            SYS_WAIT_BUTTON: status_leds = 4'b1101;  // LED1 on
+            SYS_LOADING:     status_leds = 4'b1011;  // LED2 on
+            SYS_DISPLAYING:  status_leds = 4'b0111;  // LED3 on
+            SYS_ERROR:       status_leds = 4'b0000;  // All on
+            default:         status_leds = 4'b1111;  // All off
         endcase
     end
 

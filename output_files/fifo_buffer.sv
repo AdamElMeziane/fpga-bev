@@ -1,5 +1,5 @@
 // FIFO Buffer for SDRAM to VGA data transfer
-// Adapted from EP4CE6 project for VGA display
+// Fixed clock domain crossing synchronization
 
 module fifo_buffer #(
     parameter ADDR_WIDTH = 11,  // 2048 entries for line buffer
@@ -76,12 +76,19 @@ module fifo_buffer #(
         if (!rst_n) begin
             write_ptr_bin <= '0;
             write_ptr_gray <= '0;
-            read_ptr_gray_sync1 <= '0;
-            read_ptr_gray_sync2 <= '0;
         end else begin
             write_ptr_bin <= write_ptr_bin_next;
             write_ptr_gray <= write_ptr_gray_next;
-            read_ptr_gray_sync1 <= read_ptr_gray;
+        end
+    end
+    
+    // Synchronize read pointer to write domain (FIXED)
+    always_ff @(posedge clk_write or negedge rst_n) begin
+        if (!rst_n) begin
+            read_ptr_gray_sync1 <= '0;
+            read_ptr_gray_sync2 <= '0;
+        end else begin
+            read_ptr_gray_sync1 <= read_ptr_gray;  // From read clock domain
             read_ptr_gray_sync2 <= read_ptr_gray_sync1;
         end
     end
@@ -114,12 +121,19 @@ module fifo_buffer #(
         if (!rst_n) begin
             read_ptr_bin <= '0;
             read_ptr_gray <= '0;
-            write_ptr_gray_sync1 <= '0;
-            write_ptr_gray_sync2 <= '0;
         end else begin
             read_ptr_bin <= read_ptr_bin_next;
             read_ptr_gray <= read_ptr_gray_next;
-            write_ptr_gray_sync1 <= write_ptr_gray;
+        end
+    end
+    
+    // Synchronize write pointer to read domain (FIXED)
+    always_ff @(posedge clk_read or negedge rst_n) begin
+        if (!rst_n) begin
+            write_ptr_gray_sync1 <= '0;
+            write_ptr_gray_sync2 <= '0;
+        end else begin
+            write_ptr_gray_sync1 <= write_ptr_gray;  // From write clock domain
             write_ptr_gray_sync2 <= write_ptr_gray_sync1;
         end
     end

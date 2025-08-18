@@ -1,7 +1,7 @@
 from PIL import Image
 
 # === CONFIGURATION ===
-input_image_path = "../assets/small_ayaka_input.jpg"  # Replace with your image file
+input_image_path = "../assets/colors.jpg"  # Replace with your image file
 output_mem_path = "../assets/image_3bit.mem"
 target_width = 320
 target_height = 240
