@@ -4,6 +4,14 @@
 			"name" : "Top",
 			"pins" : [
 				{
+					"name" : "vga_hsync",
+					"strict" : false
+				},
+				{
+					"name" : "vga_vsync",
+					"strict" : false
+				},
+				{
 					"name" : "vga_red[0]",
 					"strict" : false
 				},
@@ -13,14 +21,6 @@
 				},
 				{
 					"name" : "vga_blue[0]",
-					"strict" : false
-				},
-				{
-					"name" : "vga_hsync",
-					"strict" : false
-				},
-				{
-					"name" : "vga_vsync",
 					"strict" : false
 				},
 				{
@@ -92,14 +92,6 @@
 					"strict" : false
 				},
 				{
-					"name" : "status_leds[2]",
-					"strict" : false
-				},
-				{
-					"name" : "status_leds[3]",
-					"strict" : false
-				},
-				{
 					"name" : "dq[0]",
 					"strict" : false
 				},
@@ -164,15 +156,11 @@
 					"strict" : false
 				},
 				{
-					"name" : "reset_n",
+					"name" : "start_button",
 					"strict" : false
 				},
 				{
 					"name" : "clk_50MHz",
-					"strict" : false
-				},
-				{
-					"name" : "start_button",
 					"strict" : false
 				}
 			]

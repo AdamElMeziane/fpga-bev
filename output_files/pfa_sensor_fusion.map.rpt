@@ -1,6 +1,6 @@
 Analysis & Synthesis report for pfa_sensor_fusion
-Tue Aug 12 15:57:26 2025
-Quartus Prime Version 18.1.0 Build 625 09/12/2018 SJ Standard Edition
+Mon Aug 25 16:59:12 2025
+Quartus Prime Version 20.1.1 Build 720 11/11/2020 SJ Lite Edition
 
 
 ---------------------
@@ -14,41 +14,34 @@ Quartus Prime Version 18.1.0 Build 625 09/12/2018 SJ Standard Edition
   6. Analysis & Synthesis Resource Usage Summary
   7. Analysis & Synthesis Resource Utilization by Entity
   8. Analysis & Synthesis RAM Summary
-  9. State Machine - |top_sdram_vga_system|sys_state
- 10. State Machine - |top_sdram_vga_system|vga_frame_reader:frame_reader|state
- 11. State Machine - |top_sdram_vga_system|image_loader:img_loader|state
- 12. State Machine - |top_sdram_vga_system|sdram_controller:sdram_ctrl|old_state_reg
+  9. Analysis & Synthesis IP Cores Summary
+ 10. State Machine - |top_sdram_vga_system|image_loader:loader|state
+ 11. State Machine - |top_sdram_vga_system|sdram_controller:sdram_ctrl|read_state
+ 12. State Machine - |top_sdram_vga_system|sdram_controller:sdram_ctrl|write_state
  13. State Machine - |top_sdram_vga_system|sdram_controller:sdram_ctrl|state
- 14. Logic Cells Representing Combinational Loops
- 15. Registers Removed During Synthesis
- 16. General Register Statistics
- 17. Inverted Register Statistics
- 18. Registers Packed Into Inferred Megafunctions
- 19. Multiplexer Restructuring Statistics (Restructuring Performed)
- 20. Source assignments for image_loader:img_loader|image_rom:rom|altsyncram:mem_rtl_0|altsyncram_sa81:auto_generated
- 21. Parameter Settings for User Entity Instance: pll_133Mhz:pll_inst|altpll:altpll_component
- 22. Parameter Settings for User Entity Instance: sdram_controller:sdram_ctrl
- 23. Parameter Settings for User Entity Instance: image_loader:img_loader
- 24. Parameter Settings for User Entity Instance: vga_display_controller:vga_ctrl
- 25. Parameter Settings for User Entity Instance: fifo_buffer:pixel_fifo
- 26. Parameter Settings for User Entity Instance: vga_frame_reader:frame_reader
- 27. Parameter Settings for Inferred Entity Instance: image_loader:img_loader|image_rom:rom|altsyncram:mem_rtl_0
- 28. altpll Parameter Settings by Entity Instance
- 29. altsyncram Parameter Settings by Entity Instance
- 30. Port Connectivity Checks: "vga_frame_reader:frame_reader"
- 31. Port Connectivity Checks: "image_loader:img_loader"
- 32. Post-Synthesis Netlist Statistics for Top Partition
- 33. Elapsed Time Per Partition
- 34. Analysis & Synthesis Messages
+ 14. Registers Removed During Synthesis
+ 15. General Register Statistics
+ 16. Registers Packed Into Inferred Megafunctions
+ 17. Multiplexer Restructuring Statistics (Restructuring Performed)
+ 18. Source assignments for image_rom:rom|altsyncram:mem_rtl_0|altsyncram_sa81:auto_generated
+ 19. Parameter Settings for User Entity Instance: pll_143MHz:pll_inst|altpll:altpll_component
+ 20. Parameter Settings for Inferred Entity Instance: image_rom:rom|altsyncram:mem_rtl_0
+ 21. altpll Parameter Settings by Entity Instance
+ 22. altsyncram Parameter Settings by Entity Instance
+ 23. Port Connectivity Checks: "vga_display_controller:vga_timing"
+ 24. Post-Synthesis Netlist Statistics for Top Partition
+ 25. Elapsed Time Per Partition
+ 26. Analysis & Synthesis Messages
+ 27. Analysis & Synthesis Suppressed Messages
 
 
 
 ----------------
 ; Legal Notice ;
 ----------------
-Copyright (C) 2018  Intel Corporation. All rights reserved.
+Copyright (C) 2020  Intel Corporation. All rights reserved.
 Your use of Intel Corporation's design tools, logic functions 
-and other software and tools, and its AMPP partner logic 
+and other software and tools, and any partner logic 
 functions, and any output files from any of the foregoing 
 (including device programming or simulation files), and any 
 associated documentation or information are expressly subject 
@@ -58,28 +51,29 @@ the Intel FPGA IP License Agreement, or other applicable license
 agreement, including, without limitation, that your use is for
 the sole purpose of programming logic devices manufactured by
 Intel and sold by Intel or its authorized distributors.  Please
-refer to the applicable agreement for further details.
+refer to the applicable agreement for further details, at
+https://fpgasoftware.intel.com/eula.
 
 
 
-+--------------------------------------------------------------------------------------+
-; Analysis & Synthesis Summary                                                         ;
-+------------------------------------+-------------------------------------------------+
-; Analysis & Synthesis Status        ; Successful - Tue Aug 12 15:57:26 2025           ;
-; Quartus Prime Version              ; 18.1.0 Build 625 09/12/2018 SJ Standard Edition ;
-; Revision Name                      ; pfa_sensor_fusion                               ;
-; Top-level Entity Name              ; top_sdram_vga_system                            ;
-; Family                             ; Cyclone IV E                                    ;
-; Total logic elements               ; 3,754                                           ;
-;     Total combinational functions  ; 2,131                                           ;
-;     Dedicated logic registers      ; 1,889                                           ;
-; Total registers                    ; 1889                                            ;
-; Total pins                         ; 50                                              ;
-; Total virtual pins                 ; 0                                               ;
-; Total memory bits                  ; 230,400                                         ;
-; Embedded Multiplier 9-bit elements ; 0                                               ;
-; Total PLLs                         ; 1                                               ;
-+------------------------------------+-------------------------------------------------+
++----------------------------------------------------------------------------------+
+; Analysis & Synthesis Summary                                                     ;
++------------------------------------+---------------------------------------------+
+; Analysis & Synthesis Status        ; Successful - Mon Aug 25 16:59:12 2025       ;
+; Quartus Prime Version              ; 20.1.1 Build 720 11/11/2020 SJ Lite Edition ;
+; Revision Name                      ; pfa_sensor_fusion                           ;
+; Top-level Entity Name              ; top_sdram_vga_system                        ;
+; Family                             ; Cyclone IV E                                ;
+; Total logic elements               ; 279                                         ;
+;     Total combinational functions  ; 261                                         ;
+;     Dedicated logic registers      ; 134                                         ;
+; Total registers                    ; 134                                         ;
+; Total pins                         ; 49                                          ;
+; Total virtual pins                 ; 0                                           ;
+; Total memory bits                  ; 230,400                                     ;
+; Embedded Multiplier 9-bit elements ; 0                                           ;
+; Total PLLs                         ; 1                                           ;
++------------------------------------+---------------------------------------------+
 
 
 +--------------------------------------------------------------------------------------------------------------+
@@ -173,58 +167,50 @@ refer to the applicable agreement for further details.
 +----------------------------+-------------+
 ; Processors                 ; Number      ;
 +----------------------------+-------------+
-; Number detected on machine ; 12          ;
-; Maximum allowed            ; 12          ;
+; Number detected on machine ; 8           ;
+; Maximum allowed            ; 4           ;
 ;                            ;             ;
-; Average used               ; 1.01        ;
-; Maximum used               ; 12          ;
+; Average used               ; 1.00        ;
+; Maximum used               ; 4           ;
 ;                            ;             ;
 ; Usage by Processor         ; % Time Used ;
 ;     Processor 1            ; 100.0%      ;
-;     Processor 2            ;   0.1%      ;
-;     Processor 3            ;   0.1%      ;
-;     Processor 4            ;   0.1%      ;
-;     Processor 5            ;   0.1%      ;
-;     Processor 6            ;   0.1%      ;
-;     Processor 7            ;   0.1%      ;
-;     Processor 8            ;   0.1%      ;
-;     Processors 9-12        ;   0.0%      ;
+;     Processors 2-4         ;   0.0%      ;
 +----------------------------+-------------+
 
 
-+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-; Analysis & Synthesis Source Files Read                                                                                                                                                                                                                     ;
-+------------------------------------------------------+-----------------+-------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------+---------+
-; File Name with User-Entered Path                     ; Used in Netlist ; File Type                                             ; File Name with Absolute Path                                                                                    ; Library ;
-+------------------------------------------------------+-----------------+-------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------+---------+
-; src/image_rom.sv                                     ; yes             ; User SystemVerilog HDL File                           ; C:/epsilon/5tudies/AIAC/Stages/Cap PFA 2A/Project/fpga-bev/src/image_rom.sv                                     ;         ;
-; output_files/image_loader.sv                         ; yes             ; User SystemVerilog HDL File                           ; C:/epsilon/5tudies/AIAC/Stages/Cap PFA 2A/Project/fpga-bev/output_files/image_loader.sv                         ;         ;
-; output_files/vga_frame_reader.sv                     ; yes             ; User SystemVerilog HDL File                           ; C:/epsilon/5tudies/AIAC/Stages/Cap PFA 2A/Project/fpga-bev/output_files/vga_frame_reader.sv                     ;         ;
-; output_files/top_sdram_vga_system.sv                 ; yes             ; User SystemVerilog HDL File                           ; C:/epsilon/5tudies/AIAC/Stages/Cap PFA 2A/Project/fpga-bev/output_files/top_sdram_vga_system.sv                 ;         ;
-; output_files/sdram_controller.sv                     ; yes             ; User SystemVerilog HDL File                           ; C:/epsilon/5tudies/AIAC/Stages/Cap PFA 2A/Project/fpga-bev/output_files/sdram_controller.sv                     ;         ;
-; output_files/fifo_buffer.sv                          ; yes             ; User SystemVerilog HDL File                           ; C:/epsilon/5tudies/AIAC/Stages/Cap PFA 2A/Project/fpga-bev/output_files/fifo_buffer.sv                          ;         ;
-; output_files/vga_display_controller.sv               ; yes             ; User SystemVerilog HDL File                           ; C:/epsilon/5tudies/AIAC/Stages/Cap PFA 2A/Project/fpga-bev/output_files/vga_display_controller.sv               ;         ;
-; assets/image_3bit.mem                                ; yes             ; Auto-Found Unspecified File                           ; C:/epsilon/5tudies/AIAC/Stages/Cap PFA 2A/Project/fpga-bev/assets/image_3bit.mem                                ;         ;
-; pll_133mhz.v                                         ; yes             ; Auto-Found Wizard-Generated File                      ; C:/epsilon/5tudies/AIAC/Stages/Cap PFA 2A/Project/fpga-bev/pll_133mhz.v                                         ;         ;
-; altpll.tdf                                           ; yes             ; Megafunction                                          ; c:/intelfpga/18.1/quartus/libraries/megafunctions/altpll.tdf                                                    ;         ;
-; aglobal181.inc                                       ; yes             ; Megafunction                                          ; c:/intelfpga/18.1/quartus/libraries/megafunctions/aglobal181.inc                                                ;         ;
-; stratix_pll.inc                                      ; yes             ; Megafunction                                          ; c:/intelfpga/18.1/quartus/libraries/megafunctions/stratix_pll.inc                                               ;         ;
-; stratixii_pll.inc                                    ; yes             ; Megafunction                                          ; c:/intelfpga/18.1/quartus/libraries/megafunctions/stratixii_pll.inc                                             ;         ;
-; cycloneii_pll.inc                                    ; yes             ; Megafunction                                          ; c:/intelfpga/18.1/quartus/libraries/megafunctions/cycloneii_pll.inc                                             ;         ;
-; db/pll_133mhz_altpll.v                               ; yes             ; Auto-Generated Megafunction                           ; C:/epsilon/5tudies/AIAC/Stages/Cap PFA 2A/Project/fpga-bev/db/pll_133mhz_altpll.v                               ;         ;
-; altsyncram.tdf                                       ; yes             ; Megafunction                                          ; c:/intelfpga/18.1/quartus/libraries/megafunctions/altsyncram.tdf                                                ;         ;
-; stratix_ram_block.inc                                ; yes             ; Megafunction                                          ; c:/intelfpga/18.1/quartus/libraries/megafunctions/stratix_ram_block.inc                                         ;         ;
-; lpm_mux.inc                                          ; yes             ; Megafunction                                          ; c:/intelfpga/18.1/quartus/libraries/megafunctions/lpm_mux.inc                                                   ;         ;
-; lpm_decode.inc                                       ; yes             ; Megafunction                                          ; c:/intelfpga/18.1/quartus/libraries/megafunctions/lpm_decode.inc                                                ;         ;
-; a_rdenreg.inc                                        ; yes             ; Megafunction                                          ; c:/intelfpga/18.1/quartus/libraries/megafunctions/a_rdenreg.inc                                                 ;         ;
-; altrom.inc                                           ; yes             ; Megafunction                                          ; c:/intelfpga/18.1/quartus/libraries/megafunctions/altrom.inc                                                    ;         ;
-; altram.inc                                           ; yes             ; Megafunction                                          ; c:/intelfpga/18.1/quartus/libraries/megafunctions/altram.inc                                                    ;         ;
-; altdpram.inc                                         ; yes             ; Megafunction                                          ; c:/intelfpga/18.1/quartus/libraries/megafunctions/altdpram.inc                                                  ;         ;
-; db/altsyncram_sa81.tdf                               ; yes             ; Auto-Generated Megafunction                           ; C:/epsilon/5tudies/AIAC/Stages/Cap PFA 2A/Project/fpga-bev/db/altsyncram_sa81.tdf                               ;         ;
-; db/pfa_sensor_fusion.ram0_image_rom_4a2579ac.hdl.mif ; yes             ; Auto-Generated Auto-Found Memory Initialization File  ; C:/epsilon/5tudies/AIAC/Stages/Cap PFA 2A/Project/fpga-bev/db/pfa_sensor_fusion.ram0_image_rom_4a2579ac.hdl.mif ;         ;
-; db/decode_u9a.tdf                                    ; yes             ; Auto-Generated Megafunction                           ; C:/epsilon/5tudies/AIAC/Stages/Cap PFA 2A/Project/fpga-bev/db/decode_u9a.tdf                                    ;         ;
-; db/mux_gob.tdf                                       ; yes             ; Auto-Generated Megafunction                           ; C:/epsilon/5tudies/AIAC/Stages/Cap PFA 2A/Project/fpga-bev/db/mux_gob.tdf                                       ;         ;
-+------------------------------------------------------+-----------------+-------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------+---------+
++-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+; Analysis & Synthesis Source Files Read                                                                                                                                                                                                  ;
++------------------------------------------------------+-----------------+-------------------------------------------------------+----------------------------------------------------------------------------------------------+---------+
+; File Name with User-Entered Path                     ; Used in Netlist ; File Type                                             ; File Name with Absolute Path                                                                 ; Library ;
++------------------------------------------------------+-----------------+-------------------------------------------------------+----------------------------------------------------------------------------------------------+---------+
+; src/image_rom.sv                                     ; yes             ; User SystemVerilog HDL File                           ; C:/Users/aelmezia/Desktop/PFA 1/Project/src/image_rom.sv                                     ;         ;
+; output_files/image_loader.sv                         ; yes             ; User SystemVerilog HDL File                           ; C:/Users/aelmezia/Desktop/PFA 1/Project/output_files/image_loader.sv                         ;         ;
+; output_files/vga_frame_reader.sv                     ; yes             ; User SystemVerilog HDL File                           ; C:/Users/aelmezia/Desktop/PFA 1/Project/output_files/vga_frame_reader.sv                     ;         ;
+; output_files/top_sdram_vga_system.sv                 ; yes             ; User SystemVerilog HDL File                           ; C:/Users/aelmezia/Desktop/PFA 1/Project/output_files/top_sdram_vga_system.sv                 ;         ;
+; output_files/sdram_controller.sv                     ; yes             ; User SystemVerilog HDL File                           ; C:/Users/aelmezia/Desktop/PFA 1/Project/output_files/sdram_controller.sv                     ;         ;
+; output_files/vga_display_controller.sv               ; yes             ; User SystemVerilog HDL File                           ; C:/Users/aelmezia/Desktop/PFA 1/Project/output_files/vga_display_controller.sv               ;         ;
+; pll_143MHz.v                                         ; yes             ; User Wizard-Generated File                            ; C:/Users/aelmezia/Desktop/PFA 1/Project/pll_143MHz.v                                         ;         ;
+; assets/image_3bit.mem                                ; yes             ; Auto-Found Unspecified File                           ; C:/Users/aelmezia/Desktop/PFA 1/Project/assets/image_3bit.mem                                ;         ;
+; altpll.tdf                                           ; yes             ; Megafunction                                          ; c:/intelfpga_lite/20.1/quartus/libraries/megafunctions/altpll.tdf                            ;         ;
+; aglobal201.inc                                       ; yes             ; Megafunction                                          ; c:/intelfpga_lite/20.1/quartus/libraries/megafunctions/aglobal201.inc                        ;         ;
+; stratix_pll.inc                                      ; yes             ; Megafunction                                          ; c:/intelfpga_lite/20.1/quartus/libraries/megafunctions/stratix_pll.inc                       ;         ;
+; stratixii_pll.inc                                    ; yes             ; Megafunction                                          ; c:/intelfpga_lite/20.1/quartus/libraries/megafunctions/stratixii_pll.inc                     ;         ;
+; cycloneii_pll.inc                                    ; yes             ; Megafunction                                          ; c:/intelfpga_lite/20.1/quartus/libraries/megafunctions/cycloneii_pll.inc                     ;         ;
+; db/pll_143mhz_altpll.v                               ; yes             ; Auto-Generated Megafunction                           ; C:/Users/aelmezia/Desktop/PFA 1/Project/db/pll_143mhz_altpll.v                               ;         ;
+; altsyncram.tdf                                       ; yes             ; Megafunction                                          ; c:/intelfpga_lite/20.1/quartus/libraries/megafunctions/altsyncram.tdf                        ;         ;
+; stratix_ram_block.inc                                ; yes             ; Megafunction                                          ; c:/intelfpga_lite/20.1/quartus/libraries/megafunctions/stratix_ram_block.inc                 ;         ;
+; lpm_mux.inc                                          ; yes             ; Megafunction                                          ; c:/intelfpga_lite/20.1/quartus/libraries/megafunctions/lpm_mux.inc                           ;         ;
+; lpm_decode.inc                                       ; yes             ; Megafunction                                          ; c:/intelfpga_lite/20.1/quartus/libraries/megafunctions/lpm_decode.inc                        ;         ;
+; a_rdenreg.inc                                        ; yes             ; Megafunction                                          ; c:/intelfpga_lite/20.1/quartus/libraries/megafunctions/a_rdenreg.inc                         ;         ;
+; altrom.inc                                           ; yes             ; Megafunction                                          ; c:/intelfpga_lite/20.1/quartus/libraries/megafunctions/altrom.inc                            ;         ;
+; altram.inc                                           ; yes             ; Megafunction                                          ; c:/intelfpga_lite/20.1/quartus/libraries/megafunctions/altram.inc                            ;         ;
+; altdpram.inc                                         ; yes             ; Megafunction                                          ; c:/intelfpga_lite/20.1/quartus/libraries/megafunctions/altdpram.inc                          ;         ;
+; db/altsyncram_sa81.tdf                               ; yes             ; Auto-Generated Megafunction                           ; C:/Users/aelmezia/Desktop/PFA 1/Project/db/altsyncram_sa81.tdf                               ;         ;
+; db/pfa_sensor_fusion.ram0_image_rom_4a2579ac.hdl.mif ; yes             ; Auto-Generated Auto-Found Memory Initialization File  ; C:/Users/aelmezia/Desktop/PFA 1/Project/db/pfa_sensor_fusion.ram0_image_rom_4a2579ac.hdl.mif ;         ;
+; db/decode_u9a.tdf                                    ; yes             ; Auto-Generated Megafunction                           ; C:/Users/aelmezia/Desktop/PFA 1/Project/db/decode_u9a.tdf                                    ;         ;
+; db/mux_gob.tdf                                       ; yes             ; Auto-Generated Megafunction                           ; C:/Users/aelmezia/Desktop/PFA 1/Project/db/mux_gob.tdf                                       ;         ;
++------------------------------------------------------+-----------------+-------------------------------------------------------+----------------------------------------------------------------------------------------------+---------+
 
 
 +---------------------------------------------------------------------------------------------------------------------------------------------+
@@ -232,23 +218,23 @@ refer to the applicable agreement for further details.
 +---------------------------------------------+-----------------------------------------------------------------------------------------------+
 ; Resource                                    ; Usage                                                                                         ;
 +---------------------------------------------+-----------------------------------------------------------------------------------------------+
-; Estimated Total logic elements              ; 3,754                                                                                         ;
+; Estimated Total logic elements              ; 279                                                                                           ;
 ;                                             ;                                                                                               ;
-; Total combinational functions               ; 2131                                                                                          ;
+; Total combinational functions               ; 261                                                                                           ;
 ; Logic element usage by number of LUT inputs ;                                                                                               ;
-;     -- 4 input functions                    ; 1820                                                                                          ;
-;     -- 3 input functions                    ; 66                                                                                            ;
-;     -- <=2 input functions                  ; 245                                                                                           ;
+;     -- 4 input functions                    ; 116                                                                                           ;
+;     -- 3 input functions                    ; 36                                                                                            ;
+;     -- <=2 input functions                  ; 109                                                                                           ;
 ;                                             ;                                                                                               ;
 ; Logic elements by mode                      ;                                                                                               ;
-;     -- normal mode                          ; 1943                                                                                          ;
-;     -- arithmetic mode                      ; 188                                                                                           ;
+;     -- normal mode                          ; 173                                                                                           ;
+;     -- arithmetic mode                      ; 88                                                                                            ;
 ;                                             ;                                                                                               ;
-; Total registers                             ; 1889                                                                                          ;
-;     -- Dedicated logic registers            ; 1889                                                                                          ;
+; Total registers                             ; 134                                                                                           ;
+;     -- Dedicated logic registers            ; 134                                                                                           ;
 ;     -- I/O registers                        ; 0                                                                                             ;
 ;                                             ;                                                                                               ;
-; I/O pins                                    ; 50                                                                                            ;
+; I/O pins                                    ; 49                                                                                            ;
 ; Total memory bits                           ; 230400                                                                                        ;
 ;                                             ;                                                                                               ;
 ; Embedded Multiplier 9-bit elements          ; 0                                                                                             ;
@@ -256,167 +242,130 @@ refer to the applicable agreement for further details.
 ; Total PLLs                                  ; 1                                                                                             ;
 ;     -- PLLs                                 ; 1                                                                                             ;
 ;                                             ;                                                                                               ;
-; Maximum fan-out node                        ; pll_133Mhz:pll_inst|altpll:altpll_component|pll_133Mhz_altpll:auto_generated|wire_pll1_clk[0] ;
-; Maximum fan-out                             ; 1855                                                                                          ;
-; Total fan-out                               ; 14390                                                                                         ;
-; Average fan-out                             ; 3.45                                                                                          ;
+; Maximum fan-out node                        ; pll_143MHz:pll_inst|altpll:altpll_component|pll_143MHz_altpll:auto_generated|wire_pll1_clk[0] ;
+; Maximum fan-out                             ; 143                                                                                           ;
+; Total fan-out                               ; 1812                                                                                          ;
+; Average fan-out                             ; 3.36                                                                                          ;
 +---------------------------------------------+-----------------------------------------------------------------------------------------------+
 
 
-+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-; Analysis & Synthesis Resource Utilization by Entity                                                                                                                                                                                                                                                                                                      ;
-+----------------------------------------------+---------------------+---------------------------+-------------+--------------+---------+-----------+------+--------------+----------------------------------------------------------------------------------------------------------------------------------------+------------------------+--------------+
-; Compilation Hierarchy Node                   ; Combinational ALUTs ; Dedicated Logic Registers ; Memory Bits ; DSP Elements ; DSP 9x9 ; DSP 18x18 ; Pins ; Virtual Pins ; Full Hierarchy Name                                                                                                                    ; Entity Name            ; Library Name ;
-+----------------------------------------------+---------------------+---------------------------+-------------+--------------+---------+-----------+------+--------------+----------------------------------------------------------------------------------------------------------------------------------------+------------------------+--------------+
-; |top_sdram_vga_system                        ; 2131 (51)           ; 1889 (36)                 ; 230400      ; 0            ; 0       ; 0         ; 50   ; 0            ; |top_sdram_vga_system                                                                                                                  ; top_sdram_vga_system   ; work         ;
-;    |fifo_buffer:pixel_fifo|                  ; 1625 (1625)         ; 1617 (1617)               ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |top_sdram_vga_system|fifo_buffer:pixel_fifo                                                                                           ; fifo_buffer            ; work         ;
-;    |image_loader:img_loader|                 ; 66 (32)             ; 26 (22)                   ; 230400      ; 0            ; 0       ; 0         ; 0    ; 0            ; |top_sdram_vga_system|image_loader:img_loader                                                                                          ; image_loader           ; work         ;
-;       |image_rom:rom|                        ; 34 (0)              ; 4 (0)                     ; 230400      ; 0            ; 0       ; 0         ; 0    ; 0            ; |top_sdram_vga_system|image_loader:img_loader|image_rom:rom                                                                            ; image_rom              ; work         ;
-;          |altsyncram:mem_rtl_0|              ; 34 (0)              ; 4 (0)                     ; 230400      ; 0            ; 0       ; 0         ; 0    ; 0            ; |top_sdram_vga_system|image_loader:img_loader|image_rom:rom|altsyncram:mem_rtl_0                                                       ; altsyncram             ; work         ;
-;             |altsyncram_sa81:auto_generated| ; 34 (0)              ; 4 (4)                     ; 230400      ; 0            ; 0       ; 0         ; 0    ; 0            ; |top_sdram_vga_system|image_loader:img_loader|image_rom:rom|altsyncram:mem_rtl_0|altsyncram_sa81:auto_generated                        ; altsyncram_sa81        ; work         ;
-;                |decode_u9a:rden_decode|      ; 10 (10)             ; 0 (0)                     ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |top_sdram_vga_system|image_loader:img_loader|image_rom:rom|altsyncram:mem_rtl_0|altsyncram_sa81:auto_generated|decode_u9a:rden_decode ; decode_u9a             ; work         ;
-;                |mux_gob:mux2|                ; 24 (24)             ; 0 (0)                     ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |top_sdram_vga_system|image_loader:img_loader|image_rom:rom|altsyncram:mem_rtl_0|altsyncram_sa81:auto_generated|mux_gob:mux2           ; mux_gob                ; work         ;
-;    |pll_133Mhz:pll_inst|                     ; 1 (0)               ; 1 (0)                     ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |top_sdram_vga_system|pll_133Mhz:pll_inst                                                                                              ; pll_133Mhz             ; work         ;
-;       |altpll:altpll_component|              ; 1 (0)               ; 1 (0)                     ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |top_sdram_vga_system|pll_133Mhz:pll_inst|altpll:altpll_component                                                                      ; altpll                 ; work         ;
-;          |pll_133Mhz_altpll:auto_generated|  ; 1 (1)               ; 1 (1)                     ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |top_sdram_vga_system|pll_133Mhz:pll_inst|altpll:altpll_component|pll_133Mhz_altpll:auto_generated                                     ; pll_133Mhz_altpll      ; work         ;
-;    |sdram_controller:sdram_ctrl|             ; 211 (211)           ; 109 (109)                 ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |top_sdram_vga_system|sdram_controller:sdram_ctrl                                                                                      ; sdram_controller       ; work         ;
-;    |vga_display_controller:vga_ctrl|         ; 46 (46)             ; 24 (24)                   ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |top_sdram_vga_system|vga_display_controller:vga_ctrl                                                                                  ; vga_display_controller ; work         ;
-;    |vga_frame_reader:frame_reader|           ; 131 (131)           ; 76 (76)                   ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |top_sdram_vga_system|vga_frame_reader:frame_reader                                                                                    ; vga_frame_reader       ; work         ;
-+----------------------------------------------+---------------------+---------------------------+-------------+--------------+---------+-----------+------+--------------+----------------------------------------------------------------------------------------------------------------------------------------+------------------------+--------------+
++---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+; Analysis & Synthesis Resource Utilization by Entity                                                                                                                                                                                                                                                                             ;
++---------------------------------------------+---------------------+---------------------------+-------------+--------------+---------+-----------+------+--------------+----------------------------------------------------------------------------------------------------------------+------------------------+--------------+
+; Compilation Hierarchy Node                  ; Combinational ALUTs ; Dedicated Logic Registers ; Memory Bits ; DSP Elements ; DSP 9x9 ; DSP 18x18 ; Pins ; Virtual Pins ; Full Hierarchy Name                                                                                            ; Entity Name            ; Library Name ;
++---------------------------------------------+---------------------+---------------------------+-------------+--------------+---------+-----------+------+--------------+----------------------------------------------------------------------------------------------------------------+------------------------+--------------+
+; |top_sdram_vga_system                       ; 261 (4)             ; 134 (7)                   ; 230400      ; 0            ; 0       ; 0         ; 49   ; 0            ; |top_sdram_vga_system                                                                                          ; top_sdram_vga_system   ; work         ;
+;    |image_loader:loader|                    ; 29 (29)             ; 21 (21)                   ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |top_sdram_vga_system|image_loader:loader                                                                      ; image_loader           ; work         ;
+;    |image_rom:rom|                          ; 34 (0)              ; 4 (0)                     ; 230400      ; 0            ; 0       ; 0         ; 0    ; 0            ; |top_sdram_vga_system|image_rom:rom                                                                            ; image_rom              ; work         ;
+;       |altsyncram:mem_rtl_0|                ; 34 (0)              ; 4 (0)                     ; 230400      ; 0            ; 0       ; 0         ; 0    ; 0            ; |top_sdram_vga_system|image_rom:rom|altsyncram:mem_rtl_0                                                       ; altsyncram             ; work         ;
+;          |altsyncram_sa81:auto_generated|   ; 34 (0)              ; 4 (4)                     ; 230400      ; 0            ; 0       ; 0         ; 0    ; 0            ; |top_sdram_vga_system|image_rom:rom|altsyncram:mem_rtl_0|altsyncram_sa81:auto_generated                        ; altsyncram_sa81        ; work         ;
+;             |decode_u9a:rden_decode|        ; 10 (10)             ; 0 (0)                     ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |top_sdram_vga_system|image_rom:rom|altsyncram:mem_rtl_0|altsyncram_sa81:auto_generated|decode_u9a:rden_decode ; decode_u9a             ; work         ;
+;             |mux_gob:mux2|                  ; 24 (24)             ; 0 (0)                     ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |top_sdram_vga_system|image_rom:rom|altsyncram:mem_rtl_0|altsyncram_sa81:auto_generated|mux_gob:mux2           ; mux_gob                ; work         ;
+;    |pll_143MHz:pll_inst|                    ; 0 (0)               ; 1 (0)                     ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |top_sdram_vga_system|pll_143MHz:pll_inst                                                                      ; pll_143MHz             ; work         ;
+;       |altpll:altpll_component|             ; 0 (0)               ; 1 (0)                     ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |top_sdram_vga_system|pll_143MHz:pll_inst|altpll:altpll_component                                              ; altpll                 ; work         ;
+;          |pll_143MHz_altpll:auto_generated| ; 0 (0)               ; 1 (1)                     ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |top_sdram_vga_system|pll_143MHz:pll_inst|altpll:altpll_component|pll_143MHz_altpll:auto_generated             ; pll_143MHz_altpll      ; work         ;
+;    |sdram_controller:sdram_ctrl|            ; 140 (140)           ; 80 (80)                   ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |top_sdram_vga_system|sdram_controller:sdram_ctrl                                                              ; sdram_controller       ; work         ;
+;    |vga_display_controller:vga_timing|      ; 40 (40)             ; 20 (20)                   ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |top_sdram_vga_system|vga_display_controller:vga_timing                                                        ; vga_display_controller ; work         ;
+;    |vga_frame_reader:reader|                ; 14 (14)             ; 1 (1)                     ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |top_sdram_vga_system|vga_frame_reader:reader                                                                  ; vga_frame_reader       ; work         ;
++---------------------------------------------+---------------------+---------------------------+-------------+--------------+---------+-----------+------+--------------+----------------------------------------------------------------------------------------------------------------+------------------------+--------------+
 Note: For table entries with two numbers listed, the numbers in parentheses indicate the number of resources of the given type used by the specific entity alone. The numbers listed outside of parentheses indicate the total resources of the given type used by the specific entity and all of its sub-entities in the hierarchy.
 
 
-+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-; Analysis & Synthesis RAM Summary                                                                                                                                                                                                               ;
-+------------------------------------------------------------------------------------------------------+------+------+--------------+--------------+--------------+--------------+--------+------------------------------------------------------+
-; Name                                                                                                 ; Type ; Mode ; Port A Depth ; Port A Width ; Port B Depth ; Port B Width ; Size   ; MIF                                                  ;
-+------------------------------------------------------------------------------------------------------+------+------+--------------+--------------+--------------+--------------+--------+------------------------------------------------------+
-; image_loader:img_loader|image_rom:rom|altsyncram:mem_rtl_0|altsyncram_sa81:auto_generated|ALTSYNCRAM ; AUTO ; ROM  ; 76800        ; 3            ; --           ; --           ; 230400 ; db/pfa_sensor_fusion.ram0_image_rom_4a2579ac.hdl.mif ;
-+------------------------------------------------------------------------------------------------------+------+------+--------------+--------------+--------------+--------------+--------+------------------------------------------------------+
++------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+; Analysis & Synthesis RAM Summary                                                                                                                                                                                       ;
++------------------------------------------------------------------------------+------+------+--------------+--------------+--------------+--------------+--------+------------------------------------------------------+
+; Name                                                                         ; Type ; Mode ; Port A Depth ; Port A Width ; Port B Depth ; Port B Width ; Size   ; MIF                                                  ;
++------------------------------------------------------------------------------+------+------+--------------+--------------+--------------+--------------+--------+------------------------------------------------------+
+; image_rom:rom|altsyncram:mem_rtl_0|altsyncram_sa81:auto_generated|ALTSYNCRAM ; AUTO ; ROM  ; 76800        ; 3            ; --           ; --           ; 230400 ; db/pfa_sensor_fusion.ram0_image_rom_4a2579ac.hdl.mif ;
++------------------------------------------------------------------------------+------+------+--------------+--------------+--------------+--------------+--------+------------------------------------------------------+
+
+
++-----------------------------------------------------------------------------------------------------------------------------+
+; Analysis & Synthesis IP Cores Summary                                                                                       ;
++--------+--------------+---------+--------------+--------------+-------------------------------------------+-----------------+
+; Vendor ; IP Core Name ; Version ; Release Date ; License Type ; Entity Instance                           ; IP Include File ;
++--------+--------------+---------+--------------+--------------+-------------------------------------------+-----------------+
+; Altera ; ALTPLL       ; 20.1    ; N/A          ; N/A          ; |top_sdram_vga_system|pll_143MHz:pll_inst ; pll_143MHz.v    ;
++--------+--------------+---------+--------------+--------------+-------------------------------------------+-----------------+
 
 
 Encoding Type:  One-Hot
-+----------------------------------------------------------------------------------------------------------------------------------------------------------+
-; State Machine - |top_sdram_vga_system|sys_state                                                                                                          ;
-+---------------------------+--------------------------+-----------------------+---------------------------+-------------------------+---------------------+
-; Name                      ; sys_state.SYS_DISPLAYING ; sys_state.SYS_LOADING ; sys_state.SYS_WAIT_BUTTON ; sys_state.SYS_WAIT_INIT ; sys_state.SYS_ERROR ;
-+---------------------------+--------------------------+-----------------------+---------------------------+-------------------------+---------------------+
-; sys_state.SYS_WAIT_INIT   ; 0                        ; 0                     ; 0                         ; 0                       ; 0                   ;
-; sys_state.SYS_WAIT_BUTTON ; 0                        ; 0                     ; 1                         ; 1                       ; 0                   ;
-; sys_state.SYS_LOADING     ; 0                        ; 1                     ; 0                         ; 1                       ; 0                   ;
-; sys_state.SYS_DISPLAYING  ; 1                        ; 0                     ; 0                         ; 1                       ; 0                   ;
-; sys_state.SYS_ERROR       ; 0                        ; 0                     ; 0                         ; 1                       ; 1                   ;
-+---------------------------+--------------------------+-----------------------+---------------------------+-------------------------+---------------------+
++----------------------------------------------------------------------------+
+; State Machine - |top_sdram_vga_system|image_loader:loader|state            ;
++------------------+------------+------------------+------------+------------+
+; Name             ; state.DONE ; state.WAIT_WRITE ; state.LOAD ; state.IDLE ;
++------------------+------------+------------------+------------+------------+
+; state.IDLE       ; 0          ; 0                ; 0          ; 0          ;
+; state.LOAD       ; 0          ; 0                ; 1          ; 1          ;
+; state.WAIT_WRITE ; 0          ; 1                ; 0          ; 1          ;
+; state.DONE       ; 1          ; 0                ; 0          ; 1          ;
++------------------+------------+------------------+------------+------------+
 
 
 Encoding Type:  One-Hot
-+-----------------------------------------------------------------------------------------------------------------------------------------+
-; State Machine - |top_sdram_vga_system|vga_frame_reader:frame_reader|state                                                               ;
-+-----------------------+-----------------------+----------------------+---------------+------------------+------------------+------------+
-; Name                  ; state.WAIT_NEXT_FRAME ; state.FRAME_COMPLETE ; state.READING ; state.START_READ ; state.WAIT_READY ; state.IDLE ;
-+-----------------------+-----------------------+----------------------+---------------+------------------+------------------+------------+
-; state.IDLE            ; 0                     ; 0                    ; 0             ; 0                ; 0                ; 0          ;
-; state.WAIT_READY      ; 0                     ; 0                    ; 0             ; 0                ; 1                ; 1          ;
-; state.START_READ      ; 0                     ; 0                    ; 0             ; 1                ; 0                ; 1          ;
-; state.READING         ; 0                     ; 0                    ; 1             ; 0                ; 0                ; 1          ;
-; state.FRAME_COMPLETE  ; 0                     ; 1                    ; 0             ; 0                ; 0                ; 1          ;
-; state.WAIT_NEXT_FRAME ; 1                     ; 0                    ; 0             ; 0                ; 0                ; 1          ;
-+-----------------------+-----------------------+----------------------+---------------+------------------+------------------+------------+
++------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+; State Machine - |top_sdram_vga_system|sdram_controller:sdram_ctrl|read_state                                                                                                 ;
++--------------------------+----------------------+-------------------------+---------------------+--------------------------+--------------------------+----------------------+
+; Name                     ; read_state.READ_DONE ; read_state.READ_WAIT_CL ; read_state.READ_CMD ; read_state.READ_WAIT_RCD ; read_state.READ_ACTIVATE ; read_state.READ_IDLE ;
++--------------------------+----------------------+-------------------------+---------------------+--------------------------+--------------------------+----------------------+
+; read_state.READ_IDLE     ; 0                    ; 0                       ; 0                   ; 0                        ; 0                        ; 0                    ;
+; read_state.READ_ACTIVATE ; 0                    ; 0                       ; 0                   ; 0                        ; 1                        ; 1                    ;
+; read_state.READ_WAIT_RCD ; 0                    ; 0                       ; 0                   ; 1                        ; 0                        ; 1                    ;
+; read_state.READ_CMD      ; 0                    ; 0                       ; 1                   ; 0                        ; 0                        ; 1                    ;
+; read_state.READ_WAIT_CL  ; 0                    ; 1                       ; 0                   ; 0                        ; 0                        ; 1                    ;
+; read_state.READ_DONE     ; 1                    ; 0                       ; 0                   ; 0                        ; 0                        ; 1                    ;
++--------------------------+----------------------+-------------------------+---------------------+--------------------------+--------------------------+----------------------+
 
 
 Encoding Type:  One-Hot
-+---------------------------------------------------------------------+
-; State Machine - |top_sdram_vga_system|image_loader:img_loader|state ;
-+----------------+------------+----------------+----------------------+
-; Name           ; state.IDLE ; state.COMPLETE ; state.LOADING        ;
-+----------------+------------+----------------+----------------------+
-; state.IDLE     ; 0          ; 0              ; 0                    ;
-; state.LOADING  ; 1          ; 0              ; 1                    ;
-; state.COMPLETE ; 1          ; 1              ; 0                    ;
-+----------------+------------+----------------+----------------------+
++--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+; State Machine - |top_sdram_vga_system|sdram_controller:sdram_ctrl|write_state                                                                                                              ;
++----------------------------+------------------------+---------------------------+-----------------------+----------------------------+----------------------------+------------------------+
+; Name                       ; write_state.WRITE_NEXT ; write_state.WRITE_WAIT_WR ; write_state.WRITE_CMD ; write_state.WRITE_WAIT_RCD ; write_state.WRITE_ACTIVATE ; write_state.WRITE_IDLE ;
++----------------------------+------------------------+---------------------------+-----------------------+----------------------------+----------------------------+------------------------+
+; write_state.WRITE_IDLE     ; 0                      ; 0                         ; 0                     ; 0                          ; 0                          ; 0                      ;
+; write_state.WRITE_ACTIVATE ; 0                      ; 0                         ; 0                     ; 0                          ; 1                          ; 1                      ;
+; write_state.WRITE_WAIT_RCD ; 0                      ; 0                         ; 0                     ; 1                          ; 0                          ; 1                      ;
+; write_state.WRITE_CMD      ; 0                      ; 0                         ; 1                     ; 0                          ; 0                          ; 1                      ;
+; write_state.WRITE_WAIT_WR  ; 0                      ; 1                         ; 0                     ; 0                          ; 0                          ; 1                      ;
+; write_state.WRITE_NEXT     ; 1                      ; 0                         ; 0                     ; 0                          ; 0                          ; 1                      ;
++----------------------------+------------------------+---------------------------+-----------------------+----------------------------+----------------------------+------------------------+
 
 
 Encoding Type:  One-Hot
-+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-; State Machine - |top_sdram_vga_system|sdram_controller:sdram_ctrl|old_state_reg                                                                                                                                                                                                                                   ;
-+-------------------------------+-----------------------------+-----------------------+------------------------+-------------------------+--------------------------+-------------------------------+-------------------------------+----------------------------+---------------------------+----------------------+
-; Name                          ; old_state_reg.ST_BURST_STOP ; old_state_reg.ST_READ ; old_state_reg.ST_WRITE ; old_state_reg.ST_ACTIVE ; old_state_reg.ST_OPERATE ; old_state_reg.ST_SET_MODE_REG ; old_state_reg.ST_AUTO_REFRESH ; old_state_reg.ST_PRECHARGE ; old_state_reg.ST_POWER_UP ; old_state_reg.ST_NOP ;
-+-------------------------------+-----------------------------+-----------------------+------------------------+-------------------------+--------------------------+-------------------------------+-------------------------------+----------------------------+---------------------------+----------------------+
-; old_state_reg.ST_NOP          ; 0                           ; 0                     ; 0                      ; 0                       ; 0                        ; 0                             ; 0                             ; 0                          ; 0                         ; 0                    ;
-; old_state_reg.ST_POWER_UP     ; 0                           ; 0                     ; 0                      ; 0                       ; 0                        ; 0                             ; 0                             ; 0                          ; 1                         ; 1                    ;
-; old_state_reg.ST_PRECHARGE    ; 0                           ; 0                     ; 0                      ; 0                       ; 0                        ; 0                             ; 0                             ; 1                          ; 0                         ; 1                    ;
-; old_state_reg.ST_AUTO_REFRESH ; 0                           ; 0                     ; 0                      ; 0                       ; 0                        ; 0                             ; 1                             ; 0                          ; 0                         ; 1                    ;
-; old_state_reg.ST_SET_MODE_REG ; 0                           ; 0                     ; 0                      ; 0                       ; 0                        ; 1                             ; 0                             ; 0                          ; 0                         ; 1                    ;
-; old_state_reg.ST_OPERATE      ; 0                           ; 0                     ; 0                      ; 0                       ; 1                        ; 0                             ; 0                             ; 0                          ; 0                         ; 1                    ;
-; old_state_reg.ST_ACTIVE       ; 0                           ; 0                     ; 0                      ; 1                       ; 0                        ; 0                             ; 0                             ; 0                          ; 0                         ; 1                    ;
-; old_state_reg.ST_WRITE        ; 0                           ; 0                     ; 1                      ; 0                       ; 0                        ; 0                             ; 0                             ; 0                          ; 0                         ; 1                    ;
-; old_state_reg.ST_READ         ; 0                           ; 1                     ; 0                      ; 0                       ; 0                        ; 0                             ; 0                             ; 0                          ; 0                         ; 1                    ;
-; old_state_reg.ST_BURST_STOP   ; 1                           ; 0                     ; 0                      ; 0                       ; 0                        ; 0                             ; 0                             ; 0                          ; 0                         ; 1                    ;
-+-------------------------------+-----------------------------+-----------------------+------------------------+-------------------------+--------------------------+-------------------------------+-------------------------------+----------------------------+---------------------------+----------------------+
++---------------------------------------------------------------------------------------------------------------------------------------------+
+; State Machine - |top_sdram_vga_system|sdram_controller:sdram_ctrl|state                                                                     ;
++----------------------+-------------+----------------------+----------------------+-----------------+---------------------+------------------+
+; Name                 ; state.READY ; state.AUTO_REFRESH_2 ; state.AUTO_REFRESH_1 ; state.LOAD_MODE ; state.PRECHARGE_ALL ; state.RESET_WAIT ;
++----------------------+-------------+----------------------+----------------------+-----------------+---------------------+------------------+
+; state.RESET_WAIT     ; 0           ; 0                    ; 0                    ; 0               ; 0                   ; 0                ;
+; state.PRECHARGE_ALL  ; 0           ; 0                    ; 0                    ; 0               ; 1                   ; 1                ;
+; state.LOAD_MODE      ; 0           ; 0                    ; 0                    ; 1               ; 0                   ; 1                ;
+; state.AUTO_REFRESH_1 ; 0           ; 0                    ; 1                    ; 0               ; 0                   ; 1                ;
+; state.AUTO_REFRESH_2 ; 0           ; 1                    ; 0                    ; 0               ; 0                   ; 1                ;
+; state.READY          ; 1           ; 0                    ; 0                    ; 0               ; 0                   ; 1                ;
++----------------------+-------------+----------------------+----------------------+-----------------+---------------------+------------------+
 
 
-Encoding Type:  One-Hot
-+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-; State Machine - |top_sdram_vga_system|sdram_controller:sdram_ctrl|state                                                                                                                                                   ;
-+-----------------------+---------------------+---------------+----------------+-----------------+------------------+-----------------------+-----------------------+--------------------+-------------------+--------------+
-; Name                  ; state.ST_BURST_STOP ; state.ST_READ ; state.ST_WRITE ; state.ST_ACTIVE ; state.ST_OPERATE ; state.ST_SET_MODE_REG ; state.ST_AUTO_REFRESH ; state.ST_PRECHARGE ; state.ST_POWER_UP ; state.ST_NOP ;
-+-----------------------+---------------------+---------------+----------------+-----------------+------------------+-----------------------+-----------------------+--------------------+-------------------+--------------+
-; state.ST_NOP          ; 0                   ; 0             ; 0              ; 0               ; 0                ; 0                     ; 0                     ; 0                  ; 0                 ; 0            ;
-; state.ST_POWER_UP     ; 0                   ; 0             ; 0              ; 0               ; 0                ; 0                     ; 0                     ; 0                  ; 1                 ; 1            ;
-; state.ST_PRECHARGE    ; 0                   ; 0             ; 0              ; 0               ; 0                ; 0                     ; 0                     ; 1                  ; 0                 ; 1            ;
-; state.ST_AUTO_REFRESH ; 0                   ; 0             ; 0              ; 0               ; 0                ; 0                     ; 1                     ; 0                  ; 0                 ; 1            ;
-; state.ST_SET_MODE_REG ; 0                   ; 0             ; 0              ; 0               ; 0                ; 1                     ; 0                     ; 0                  ; 0                 ; 1            ;
-; state.ST_OPERATE      ; 0                   ; 0             ; 0              ; 0               ; 1                ; 0                     ; 0                     ; 0                  ; 0                 ; 1            ;
-; state.ST_ACTIVE       ; 0                   ; 0             ; 0              ; 1               ; 0                ; 0                     ; 0                     ; 0                  ; 0                 ; 1            ;
-; state.ST_WRITE        ; 0                   ; 0             ; 1              ; 0               ; 0                ; 0                     ; 0                     ; 0                  ; 0                 ; 1            ;
-; state.ST_READ         ; 0                   ; 1             ; 0              ; 0               ; 0                ; 0                     ; 0                     ; 0                  ; 0                 ; 1            ;
-; state.ST_BURST_STOP   ; 1                   ; 0             ; 0              ; 0               ; 0                ; 0                     ; 0                     ; 0                  ; 0                 ; 1            ;
-+-----------------------+---------------------+---------------+----------------+-----------------+------------------+-----------------------+-----------------------+--------------------+-------------------+--------------+
-
-
-+-------------------------------------------------------------+
-; Logic Cells Representing Combinational Loops                ;
-+--------------------------------------------------------+----+
-; Logic Cell Name                                        ;    ;
-+--------------------------------------------------------+----+
-; fifo_buffer:pixel_fifo|write_ptr_gray_next[0]~0        ;    ;
-; fifo_buffer:pixel_fifo|write_ptr_gray_next[0]~1        ;    ;
-; fifo_buffer:pixel_fifo|write_ptr_gray_next[1]~2        ;    ;
-; fifo_buffer:pixel_fifo|write_ptr_gray_next[2]~3        ;    ;
-; fifo_buffer:pixel_fifo|write_ptr_gray_next[3]~4        ;    ;
-; fifo_buffer:pixel_fifo|write_ptr_gray_next[4]~5        ;    ;
-; fifo_buffer:pixel_fifo|write_ptr_gray_next[5]~6        ;    ;
-; fifo_buffer:pixel_fifo|write_ptr_gray_next[6]~7        ;    ;
-; fifo_buffer:pixel_fifo|write_ptr_gray_next[7]~8        ;    ;
-; fifo_buffer:pixel_fifo|write_ptr_gray_next[8]~9        ;    ;
-; Number of logic cells representing combinational loops ; 10 ;
-+--------------------------------------------------------+----+
-Note: All cells listed above may not be present at the end of synthesis due to various synthesis optimizations.
-
-
-+--------------------------------------------------------------------------------------------------------+
-; Registers Removed During Synthesis                                                                     ;
-+--------------------------------------------------+-----------------------------------------------------+
-; Register name                                    ; Reason for Removal                                  ;
-+--------------------------------------------------+-----------------------------------------------------+
-; fifo_buffer:pixel_fifo|write_ptr_gray[9]         ; Merged with fifo_buffer:pixel_fifo|write_ptr_bin[9] ;
-; fifo_buffer:pixel_fifo|read_ptr_gray[9]          ; Merged with fifo_buffer:pixel_fifo|read_ptr_bin[9]  ;
-; vga_frame_reader:frame_reader|last_vga_line[8,9] ; Stuck at GND due to stuck port data_in              ;
-; sys_state~4                                      ; Lost fanout                                         ;
-; sys_state~5                                      ; Lost fanout                                         ;
-; vga_frame_reader:frame_reader|state~4            ; Lost fanout                                         ;
-; vga_frame_reader:frame_reader|state~5            ; Lost fanout                                         ;
-; vga_frame_reader:frame_reader|state~6            ; Lost fanout                                         ;
-; sdram_controller:sdram_ctrl|old_state_reg~4      ; Lost fanout                                         ;
-; sdram_controller:sdram_ctrl|old_state_reg~5      ; Lost fanout                                         ;
-; sdram_controller:sdram_ctrl|old_state_reg~6      ; Lost fanout                                         ;
-; sdram_controller:sdram_ctrl|old_state_reg~7      ; Lost fanout                                         ;
-; sdram_controller:sdram_ctrl|state~4              ; Lost fanout                                         ;
-; sdram_controller:sdram_ctrl|state~5              ; Lost fanout                                         ;
-; sdram_controller:sdram_ctrl|state~6              ; Lost fanout                                         ;
-; sdram_controller:sdram_ctrl|state~7              ; Lost fanout                                         ;
-; Total Number of Removed Registers = 17           ;                                                     ;
-+--------------------------------------------------+-----------------------------------------------------+
++--------------------------------------------------------------------------------------------+
+; Registers Removed During Synthesis                                                         ;
++---------------------------------------------------+----------------------------------------+
+; Register name                                     ; Reason for Removal                     ;
++---------------------------------------------------+----------------------------------------+
+; sdram_controller:sdram_ctrl|read_addr_latched[19] ; Stuck at GND due to stuck port data_in ;
+; image_loader:loader|state~4                       ; Lost fanout                            ;
+; image_loader:loader|state~5                       ; Lost fanout                            ;
+; sdram_controller:sdram_ctrl|read_state~10         ; Lost fanout                            ;
+; sdram_controller:sdram_ctrl|read_state~11         ; Lost fanout                            ;
+; sdram_controller:sdram_ctrl|read_state~12         ; Lost fanout                            ;
+; sdram_controller:sdram_ctrl|write_state~10        ; Lost fanout                            ;
+; sdram_controller:sdram_ctrl|write_state~11        ; Lost fanout                            ;
+; sdram_controller:sdram_ctrl|write_state~12        ; Lost fanout                            ;
+; sdram_controller:sdram_ctrl|state~4               ; Lost fanout                            ;
+; sdram_controller:sdram_ctrl|state~5               ; Lost fanout                            ;
+; sdram_controller:sdram_ctrl|state~6               ; Lost fanout                            ;
+; Total Number of Removed Registers = 12            ;                                        ;
++---------------------------------------------------+----------------------------------------+
 
 
 +------------------------------------------------------+
@@ -424,78 +373,60 @@ Note: All cells listed above may not be present at the end of synthesis due to v
 +----------------------------------------------+-------+
 ; Statistic                                    ; Value ;
 +----------------------------------------------+-------+
-; Total registers                              ; 1889  ;
-; Number of registers using Synchronous Clear  ; 107   ;
-; Number of registers using Synchronous Load   ; 5     ;
-; Number of registers using Asynchronous Clear ; 345   ;
+; Total registers                              ; 134   ;
+; Number of registers using Synchronous Clear  ; 16    ;
+; Number of registers using Synchronous Load   ; 0     ;
+; Number of registers using Asynchronous Clear ; 129   ;
 ; Number of registers using Asynchronous Load  ; 0     ;
-; Number of registers using Clock Enable       ; 1643  ;
+; Number of registers using Clock Enable       ; 64    ;
 ; Number of registers using Preset             ; 0     ;
 +----------------------------------------------+-------+
 
 
-+------------------------------------------------------+
-; Inverted Register Statistics                         ;
-+--------------------------------------------+---------+
-; Inverted Register                          ; Fan out ;
-+--------------------------------------------+---------+
-; sdram_controller:sdram_ctrl|command_reg[2] ; 1       ;
-; sdram_controller:sdram_ctrl|command_reg[1] ; 1       ;
-; sdram_controller:sdram_ctrl|command_reg[0] ; 1       ;
-; start_sync2                                ; 3       ;
-; start_sync3                                ; 2       ;
-; start_sync1                                ; 1       ;
-; Total number of inverted registers = 6     ;         ;
-+--------------------------------------------+---------+
++------------------------------------------------------------+
+; Registers Packed Into Inferred Megafunctions               ;
++---------------------------+-------------------------+------+
+; Register Name             ; Megafunction            ; Type ;
++---------------------------+-------------------------+------+
+; image_rom:rom|pixel[0..2] ; image_rom:rom|mem_rtl_0 ; RAM  ;
++---------------------------+-------------------------+------+
 
 
-+------------------------------------------------------------------------------------------------------------+
-; Registers Packed Into Inferred Megafunctions                                                               ;
-+---------------------------------------------------+-------------------------------------------------+------+
-; Register Name                                     ; Megafunction                                    ; Type ;
-+---------------------------------------------------+-------------------------------------------------+------+
-; image_loader:img_loader|image_rom:rom|pixel[0..2] ; image_loader:img_loader|image_rom:rom|mem_rtl_0 ; RAM  ;
-+---------------------------------------------------+-------------------------------------------------+------+
-
-
-+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-; Multiplexer Restructuring Statistics (Restructuring Performed)                                                                                                                        ;
-+--------------------+-----------+---------------+----------------------+------------------------+------------+-------------------------------------------------------------------------+
-; Multiplexer Inputs ; Bus Width ; Baseline Area ; Area if Restructured ; Saving if Restructured ; Registered ; Example Multiplexer Output                                              ;
-+--------------------+-----------+---------------+----------------------+------------------------+------------+-------------------------------------------------------------------------+
-; 3:1                ; 18 bits   ; 36 LEs        ; 18 LEs               ; 18 LEs                 ; Yes        ; |top_sdram_vga_system|image_loader:img_loader|pixel_addr_reg[17]        ;
-; 3:1                ; 11 bits   ; 22 LEs        ; 11 LEs               ; 11 LEs                 ; Yes        ; |top_sdram_vga_system|sdram_controller:sdram_ctrl|refresh_count_reg[1]  ;
-; 3:1                ; 24 bits   ; 48 LEs        ; 24 LEs               ; 24 LEs                 ; Yes        ; |top_sdram_vga_system|timeout_counter[13]                               ;
-; 5:1                ; 12 bits   ; 36 LEs        ; 12 LEs               ; 24 LEs                 ; Yes        ; |top_sdram_vga_system|sdram_controller:sdram_ctrl|rows_written_reg[0]   ;
-; 5:1                ; 12 bits   ; 36 LEs        ; 12 LEs               ; 24 LEs                 ; Yes        ; |top_sdram_vga_system|sdram_controller:sdram_ctrl|rows_read_reg[9]      ;
-; 9:1                ; 3 bits    ; 18 LEs        ; 6 LEs                ; 12 LEs                 ; Yes        ; |top_sdram_vga_system|sdram_controller:sdram_ctrl|addr_reg[9]           ;
-; 11:1               ; 7 bits    ; 49 LEs        ; 21 LEs               ; 28 LEs                 ; Yes        ; |top_sdram_vga_system|sdram_controller:sdram_ctrl|addr_reg[6]           ;
-; 3:1                ; 2 bits    ; 4 LEs         ; 4 LEs                ; 0 LEs                  ; No         ; |top_sdram_vga_system|sdram_controller:sdram_ctrl|command_next          ;
-; 3:1                ; 10 bits   ; 20 LEs        ; 20 LEs               ; 0 LEs                  ; No         ; |top_sdram_vga_system|vga_frame_reader:frame_reader|pixels_in_line_next ;
-; 6:1                ; 3 bits    ; 12 LEs        ; 6 LEs                ; 6 LEs                  ; No         ; |top_sdram_vga_system|image_loader:img_loader|Selector0                 ;
-; 8:1                ; 5 bits    ; 25 LEs        ; 15 LEs               ; 10 LEs                 ; No         ; |top_sdram_vga_system|Selector4                                         ;
-; 7:1                ; 4 bits    ; 16 LEs        ; 12 LEs               ; 4 LEs                  ; No         ; |top_sdram_vga_system|vga_frame_reader:frame_reader|Selector4           ;
-; 8:1                ; 2 bits    ; 10 LEs        ; 4 LEs                ; 6 LEs                  ; No         ; |top_sdram_vga_system|vga_frame_reader:frame_reader|Selector3           ;
-+--------------------+-----------+---------------+----------------------+------------------------+------------+-------------------------------------------------------------------------+
-
-
-+------------------------------------------------------------------------------------------------------------------+
-; Source assignments for image_loader:img_loader|image_rom:rom|altsyncram:mem_rtl_0|altsyncram_sa81:auto_generated ;
-+---------------------------------+--------------------+------+----------------------------------------------------+
-; Assignment                      ; Value              ; From ; To                                                 ;
-+---------------------------------+--------------------+------+----------------------------------------------------+
-; OPTIMIZE_POWER_DURING_SYNTHESIS ; NORMAL_COMPILATION ; -    ; -                                                  ;
-+---------------------------------+--------------------+------+----------------------------------------------------+
++--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+; Multiplexer Restructuring Statistics (Restructuring Performed)                                                                                                                 ;
++--------------------+-----------+---------------+----------------------+------------------------+------------+------------------------------------------------------------------+
+; Multiplexer Inputs ; Bus Width ; Baseline Area ; Area if Restructured ; Saving if Restructured ; Registered ; Example Multiplexer Output                                       ;
++--------------------+-----------+---------------+----------------------+------------------------+------------+------------------------------------------------------------------+
+; 4:1                ; 3 bits    ; 6 LEs         ; 3 LEs                ; 3 LEs                  ; Yes        ; |top_sdram_vga_system|sdram_controller:sdram_ctrl|read_timer[0]  ;
+; 4:1                ; 2 bits    ; 4 LEs         ; 2 LEs                ; 2 LEs                  ; Yes        ; |top_sdram_vga_system|sdram_controller:sdram_ctrl|write_timer[2] ;
+; 3:1                ; 3 bits    ; 6 LEs         ; 3 LEs                ; 3 LEs                  ; No         ; |top_sdram_vga_system|vga_frame_reader:reader|pixel_out[2]       ;
+; 4:1                ; 2 bits    ; 4 LEs         ; 4 LEs                ; 0 LEs                  ; No         ; |top_sdram_vga_system|sdram_controller:sdram_ctrl|sdram_addr[9]  ;
+; 4:1                ; 6 bits    ; 12 LEs        ; 12 LEs               ; 0 LEs                  ; No         ; |top_sdram_vga_system|sdram_controller:sdram_ctrl|sdram_addr[2]  ;
+; 6:1                ; 2 bits    ; 8 LEs         ; 6 LEs                ; 2 LEs                  ; No         ; |top_sdram_vga_system|image_loader:loader|Selector1              ;
+; 7:1                ; 2 bits    ; 8 LEs         ; 4 LEs                ; 4 LEs                  ; No         ; |top_sdram_vga_system|sdram_controller:sdram_ctrl|Selector15     ;
+; 6:1                ; 2 bits    ; 8 LEs         ; 6 LEs                ; 2 LEs                  ; No         ; |top_sdram_vga_system|sdram_controller:sdram_ctrl|Selector2      ;
+; 7:1                ; 2 bits    ; 8 LEs         ; 4 LEs                ; 4 LEs                  ; No         ; |top_sdram_vga_system|sdram_controller:sdram_ctrl|Selector6      ;
+; 6:1                ; 2 bits    ; 8 LEs         ; 6 LEs                ; 2 LEs                  ; No         ; |top_sdram_vga_system|sdram_controller:sdram_ctrl|sdram_addr[4]  ;
++--------------------+-----------+---------------+----------------------+------------------------+------------+------------------------------------------------------------------+
 
 
 +------------------------------------------------------------------------------------------+
-; Parameter Settings for User Entity Instance: pll_133Mhz:pll_inst|altpll:altpll_component ;
+; Source assignments for image_rom:rom|altsyncram:mem_rtl_0|altsyncram_sa81:auto_generated ;
++---------------------------------+--------------------+------+----------------------------+
+; Assignment                      ; Value              ; From ; To                         ;
++---------------------------------+--------------------+------+----------------------------+
+; OPTIMIZE_POWER_DURING_SYNTHESIS ; NORMAL_COMPILATION ; -    ; -                          ;
++---------------------------------+--------------------+------+----------------------------+
+
+
++------------------------------------------------------------------------------------------+
+; Parameter Settings for User Entity Instance: pll_143MHz:pll_inst|altpll:altpll_component ;
 +-------------------------------+------------------------------+---------------------------+
 ; Parameter Name                ; Value                        ; Type                      ;
 +-------------------------------+------------------------------+---------------------------+
 ; OPERATION_MODE                ; NORMAL                       ; Untyped                   ;
 ; PLL_TYPE                      ; AUTO                         ; Untyped                   ;
-; LPM_HINT                      ; CBX_MODULE_PREFIX=pll_133Mhz ; Untyped                   ;
+; LPM_HINT                      ; CBX_MODULE_PREFIX=pll_143MHz ; Untyped                   ;
 ; QUALIFY_CONF_DONE             ; OFF                          ; Untyped                   ;
 ; COMPENSATE_CLOCK              ; CLK0                         ; Untyped                   ;
 ; SCAN_CHAIN                    ; LONG                         ; Untyped                   ;
@@ -530,7 +461,7 @@ Note: All cells listed above may not be present at the end of synthesis due to v
 ; CLK3_MULTIPLY_BY              ; 1                            ; Untyped                   ;
 ; CLK2_MULTIPLY_BY              ; 1                            ; Untyped                   ;
 ; CLK1_MULTIPLY_BY              ; 1                            ; Untyped                   ;
-; CLK0_MULTIPLY_BY              ; 133                          ; Signed Integer            ;
+; CLK0_MULTIPLY_BY              ; 143                          ; Signed Integer            ;
 ; CLK9_DIVIDE_BY                ; 0                            ; Untyped                   ;
 ; CLK8_DIVIDE_BY                ; 0                            ; Untyped                   ;
 ; CLK7_DIVIDE_BY                ; 0                            ; Untyped                   ;
@@ -845,7 +776,7 @@ Note: All cells listed above may not be present at the end of synthesis due to v
 ; C7_TEST_SOURCE                ; 5                            ; Untyped                   ;
 ; C8_TEST_SOURCE                ; 5                            ; Untyped                   ;
 ; C9_TEST_SOURCE                ; 5                            ; Untyped                   ;
-; CBXI_PARAMETER                ; pll_133Mhz_altpll            ; Untyped                   ;
+; CBXI_PARAMETER                ; pll_143MHz_altpll            ; Untyped                   ;
 ; VCO_FREQUENCY_CONTROL         ; AUTO                         ; Untyped                   ;
 ; VCO_PHASE_SHIFT_STEP          ; 0                            ; Untyped                   ;
 ; WIDTH_CLOCK                   ; 5                            ; Signed Integer            ;
@@ -862,120 +793,64 @@ Note: All cells listed above may not be present at the end of synthesis due to v
 Note: In order to hide this table in the UI and the text report file, please set the "Show Parameter Settings in Synthesis Report" option in "Analysis and Synthesis Settings -> More Settings" to "Off".
 
 
-+--------------------------------------------------------------------------+
-; Parameter Settings for User Entity Instance: sdram_controller:sdram_ctrl ;
-+----------------+-------+-------------------------------------------------+
-; Parameter Name ; Value ; Type                                            ;
-+----------------+-------+-------------------------------------------------+
-; DATA_WIDTH     ; 16    ; Signed Integer                                  ;
-+----------------+-------+-------------------------------------------------+
-Note: In order to hide this table in the UI and the text report file, please set the "Show Parameter Settings in Synthesis Report" option in "Analysis and Synthesis Settings -> More Settings" to "Off".
-
-
-+----------------------------------------------------------------------+
-; Parameter Settings for User Entity Instance: image_loader:img_loader ;
-+----------------+-------+---------------------------------------------+
-; Parameter Name ; Value ; Type                                        ;
-+----------------+-------+---------------------------------------------+
-; IMG_WIDTH      ; 320   ; Signed Integer                              ;
-; IMG_HEIGHT     ; 240   ; Signed Integer                              ;
-; DATA_WIDTH     ; 16    ; Signed Integer                              ;
-+----------------+-------+---------------------------------------------+
-Note: In order to hide this table in the UI and the text report file, please set the "Show Parameter Settings in Synthesis Report" option in "Analysis and Synthesis Settings -> More Settings" to "Off".
-
-
-+------------------------------------------------------------------------------+
-; Parameter Settings for User Entity Instance: vga_display_controller:vga_ctrl ;
-+----------------+-------+-----------------------------------------------------+
-; Parameter Name ; Value ; Type                                                ;
-+----------------+-------+-----------------------------------------------------+
-; IMG_WIDTH      ; 320   ; Signed Integer                                      ;
-; IMG_HEIGHT     ; 240   ; Signed Integer                                      ;
-+----------------+-------+-----------------------------------------------------+
-Note: In order to hide this table in the UI and the text report file, please set the "Show Parameter Settings in Synthesis Report" option in "Analysis and Synthesis Settings -> More Settings" to "Off".
-
-
-+---------------------------------------------------------------------+
-; Parameter Settings for User Entity Instance: fifo_buffer:pixel_fifo ;
-+----------------+-------+--------------------------------------------+
-; Parameter Name ; Value ; Type                                       ;
-+----------------+-------+--------------------------------------------+
-; ADDR_WIDTH     ; 9     ; Signed Integer                             ;
-; DATA_WIDTH     ; 16    ; Signed Integer                             ;
-+----------------+-------+--------------------------------------------+
-Note: In order to hide this table in the UI and the text report file, please set the "Show Parameter Settings in Synthesis Report" option in "Analysis and Synthesis Settings -> More Settings" to "Off".
-
-
-+----------------------------------------------------------------------------+
-; Parameter Settings for User Entity Instance: vga_frame_reader:frame_reader ;
-+----------------+-------+---------------------------------------------------+
-; Parameter Name ; Value ; Type                                              ;
-+----------------+-------+---------------------------------------------------+
-; IMG_WIDTH      ; 320   ; Signed Integer                                    ;
-; IMG_HEIGHT     ; 240   ; Signed Integer                                    ;
-; DATA_WIDTH     ; 16    ; Signed Integer                                    ;
-+----------------+-------+---------------------------------------------------+
-Note: In order to hide this table in the UI and the text report file, please set the "Show Parameter Settings in Synthesis Report" option in "Analysis and Synthesis Settings -> More Settings" to "Off".
-
-
-+-------------------------------------------------------------------------------------------------------------+
-; Parameter Settings for Inferred Entity Instance: image_loader:img_loader|image_rom:rom|altsyncram:mem_rtl_0 ;
-+------------------------------------+------------------------------------------------------+-----------------+
-; Parameter Name                     ; Value                                                ; Type            ;
-+------------------------------------+------------------------------------------------------+-----------------+
-; BYTE_SIZE_BLOCK                    ; 8                                                    ; Untyped         ;
-; AUTO_CARRY_CHAINS                  ; ON                                                   ; AUTO_CARRY      ;
-; IGNORE_CARRY_BUFFERS               ; OFF                                                  ; IGNORE_CARRY    ;
-; AUTO_CASCADE_CHAINS                ; ON                                                   ; AUTO_CASCADE    ;
-; IGNORE_CASCADE_BUFFERS             ; OFF                                                  ; IGNORE_CASCADE  ;
-; WIDTH_BYTEENA                      ; 1                                                    ; Untyped         ;
-; OPERATION_MODE                     ; ROM                                                  ; Untyped         ;
-; WIDTH_A                            ; 3                                                    ; Untyped         ;
-; WIDTHAD_A                          ; 17                                                   ; Untyped         ;
-; NUMWORDS_A                         ; 76800                                                ; Untyped         ;
-; OUTDATA_REG_A                      ; UNREGISTERED                                         ; Untyped         ;
-; ADDRESS_ACLR_A                     ; NONE                                                 ; Untyped         ;
-; OUTDATA_ACLR_A                     ; NONE                                                 ; Untyped         ;
-; WRCONTROL_ACLR_A                   ; NONE                                                 ; Untyped         ;
-; INDATA_ACLR_A                      ; NONE                                                 ; Untyped         ;
-; BYTEENA_ACLR_A                     ; NONE                                                 ; Untyped         ;
-; WIDTH_B                            ; 1                                                    ; Untyped         ;
-; WIDTHAD_B                          ; 1                                                    ; Untyped         ;
-; NUMWORDS_B                         ; 1                                                    ; Untyped         ;
-; INDATA_REG_B                       ; CLOCK1                                               ; Untyped         ;
-; WRCONTROL_WRADDRESS_REG_B          ; CLOCK1                                               ; Untyped         ;
-; RDCONTROL_REG_B                    ; CLOCK1                                               ; Untyped         ;
-; ADDRESS_REG_B                      ; CLOCK1                                               ; Untyped         ;
-; OUTDATA_REG_B                      ; UNREGISTERED                                         ; Untyped         ;
-; BYTEENA_REG_B                      ; CLOCK1                                               ; Untyped         ;
-; INDATA_ACLR_B                      ; NONE                                                 ; Untyped         ;
-; WRCONTROL_ACLR_B                   ; NONE                                                 ; Untyped         ;
-; ADDRESS_ACLR_B                     ; NONE                                                 ; Untyped         ;
-; OUTDATA_ACLR_B                     ; NONE                                                 ; Untyped         ;
-; RDCONTROL_ACLR_B                   ; NONE                                                 ; Untyped         ;
-; BYTEENA_ACLR_B                     ; NONE                                                 ; Untyped         ;
-; WIDTH_BYTEENA_A                    ; 1                                                    ; Untyped         ;
-; WIDTH_BYTEENA_B                    ; 1                                                    ; Untyped         ;
-; RAM_BLOCK_TYPE                     ; AUTO                                                 ; Untyped         ;
-; BYTE_SIZE                          ; 8                                                    ; Untyped         ;
-; READ_DURING_WRITE_MODE_MIXED_PORTS ; DONT_CARE                                            ; Untyped         ;
-; READ_DURING_WRITE_MODE_PORT_A      ; NEW_DATA_NO_NBE_READ                                 ; Untyped         ;
-; READ_DURING_WRITE_MODE_PORT_B      ; NEW_DATA_NO_NBE_READ                                 ; Untyped         ;
-; INIT_FILE                          ; db/pfa_sensor_fusion.ram0_image_rom_4a2579ac.hdl.mif ; Untyped         ;
-; INIT_FILE_LAYOUT                   ; PORT_A                                               ; Untyped         ;
-; MAXIMUM_DEPTH                      ; 0                                                    ; Untyped         ;
-; CLOCK_ENABLE_INPUT_A               ; NORMAL                                               ; Untyped         ;
-; CLOCK_ENABLE_INPUT_B               ; NORMAL                                               ; Untyped         ;
-; CLOCK_ENABLE_OUTPUT_A              ; NORMAL                                               ; Untyped         ;
-; CLOCK_ENABLE_OUTPUT_B              ; NORMAL                                               ; Untyped         ;
-; CLOCK_ENABLE_CORE_A                ; USE_INPUT_CLKEN                                      ; Untyped         ;
-; CLOCK_ENABLE_CORE_B                ; USE_INPUT_CLKEN                                      ; Untyped         ;
-; ENABLE_ECC                         ; FALSE                                                ; Untyped         ;
-; ECC_PIPELINE_STAGE_ENABLED         ; FALSE                                                ; Untyped         ;
-; WIDTH_ECCSTATUS                    ; 3                                                    ; Untyped         ;
-; DEVICE_FAMILY                      ; Cyclone IV E                                         ; Untyped         ;
-; CBXI_PARAMETER                     ; altsyncram_sa81                                      ; Untyped         ;
-+------------------------------------+------------------------------------------------------+-----------------+
++------------------------------------------------------------------------------------------------------------+
+; Parameter Settings for Inferred Entity Instance: image_rom:rom|altsyncram:mem_rtl_0                        ;
++------------------------------------+------------------------------------------------------+----------------+
+; Parameter Name                     ; Value                                                ; Type           ;
++------------------------------------+------------------------------------------------------+----------------+
+; BYTE_SIZE_BLOCK                    ; 8                                                    ; Untyped        ;
+; AUTO_CARRY_CHAINS                  ; ON                                                   ; AUTO_CARRY     ;
+; IGNORE_CARRY_BUFFERS               ; OFF                                                  ; IGNORE_CARRY   ;
+; AUTO_CASCADE_CHAINS                ; ON                                                   ; AUTO_CASCADE   ;
+; IGNORE_CASCADE_BUFFERS             ; OFF                                                  ; IGNORE_CASCADE ;
+; WIDTH_BYTEENA                      ; 1                                                    ; Untyped        ;
+; OPERATION_MODE                     ; ROM                                                  ; Untyped        ;
+; WIDTH_A                            ; 3                                                    ; Untyped        ;
+; WIDTHAD_A                          ; 17                                                   ; Untyped        ;
+; NUMWORDS_A                         ; 76800                                                ; Untyped        ;
+; OUTDATA_REG_A                      ; UNREGISTERED                                         ; Untyped        ;
+; ADDRESS_ACLR_A                     ; NONE                                                 ; Untyped        ;
+; OUTDATA_ACLR_A                     ; NONE                                                 ; Untyped        ;
+; WRCONTROL_ACLR_A                   ; NONE                                                 ; Untyped        ;
+; INDATA_ACLR_A                      ; NONE                                                 ; Untyped        ;
+; BYTEENA_ACLR_A                     ; NONE                                                 ; Untyped        ;
+; WIDTH_B                            ; 1                                                    ; Untyped        ;
+; WIDTHAD_B                          ; 1                                                    ; Untyped        ;
+; NUMWORDS_B                         ; 1                                                    ; Untyped        ;
+; INDATA_REG_B                       ; CLOCK1                                               ; Untyped        ;
+; WRCONTROL_WRADDRESS_REG_B          ; CLOCK1                                               ; Untyped        ;
+; RDCONTROL_REG_B                    ; CLOCK1                                               ; Untyped        ;
+; ADDRESS_REG_B                      ; CLOCK1                                               ; Untyped        ;
+; OUTDATA_REG_B                      ; UNREGISTERED                                         ; Untyped        ;
+; BYTEENA_REG_B                      ; CLOCK1                                               ; Untyped        ;
+; INDATA_ACLR_B                      ; NONE                                                 ; Untyped        ;
+; WRCONTROL_ACLR_B                   ; NONE                                                 ; Untyped        ;
+; ADDRESS_ACLR_B                     ; NONE                                                 ; Untyped        ;
+; OUTDATA_ACLR_B                     ; NONE                                                 ; Untyped        ;
+; RDCONTROL_ACLR_B                   ; NONE                                                 ; Untyped        ;
+; BYTEENA_ACLR_B                     ; NONE                                                 ; Untyped        ;
+; WIDTH_BYTEENA_A                    ; 1                                                    ; Untyped        ;
+; WIDTH_BYTEENA_B                    ; 1                                                    ; Untyped        ;
+; RAM_BLOCK_TYPE                     ; AUTO                                                 ; Untyped        ;
+; BYTE_SIZE                          ; 8                                                    ; Untyped        ;
+; READ_DURING_WRITE_MODE_MIXED_PORTS ; DONT_CARE                                            ; Untyped        ;
+; READ_DURING_WRITE_MODE_PORT_A      ; NEW_DATA_NO_NBE_READ                                 ; Untyped        ;
+; READ_DURING_WRITE_MODE_PORT_B      ; NEW_DATA_NO_NBE_READ                                 ; Untyped        ;
+; INIT_FILE                          ; db/pfa_sensor_fusion.ram0_image_rom_4a2579ac.hdl.mif ; Untyped        ;
+; INIT_FILE_LAYOUT                   ; PORT_A                                               ; Untyped        ;
+; MAXIMUM_DEPTH                      ; 0                                                    ; Untyped        ;
+; CLOCK_ENABLE_INPUT_A               ; NORMAL                                               ; Untyped        ;
+; CLOCK_ENABLE_INPUT_B               ; NORMAL                                               ; Untyped        ;
+; CLOCK_ENABLE_OUTPUT_A              ; NORMAL                                               ; Untyped        ;
+; CLOCK_ENABLE_OUTPUT_B              ; NORMAL                                               ; Untyped        ;
+; CLOCK_ENABLE_CORE_A                ; USE_INPUT_CLKEN                                      ; Untyped        ;
+; CLOCK_ENABLE_CORE_B                ; USE_INPUT_CLKEN                                      ; Untyped        ;
+; ENABLE_ECC                         ; FALSE                                                ; Untyped        ;
+; ECC_PIPELINE_STAGE_ENABLED         ; FALSE                                                ; Untyped        ;
+; WIDTH_ECCSTATUS                    ; 3                                                    ; Untyped        ;
+; DEVICE_FAMILY                      ; Cyclone IV E                                         ; Untyped        ;
+; CBXI_PARAMETER                     ; altsyncram_sa81                                      ; Untyped        ;
++------------------------------------+------------------------------------------------------+----------------+
 Note: In order to hide this table in the UI and the text report file, please set the "Show Parameter Settings in Synthesis Report" option in "Analysis and Synthesis Settings -> More Settings" to "Off".
 
 
@@ -985,7 +860,7 @@ Note: In order to hide this table in the UI and the text report file, please set
 ; Name                          ; Value                                       ;
 +-------------------------------+---------------------------------------------+
 ; Number of entity instances    ; 1                                           ;
-; Entity Instance               ; pll_133Mhz:pll_inst|altpll:altpll_component ;
+; Entity Instance               ; pll_143MHz:pll_inst|altpll:altpll_component ;
 ;     -- OPERATION_MODE         ; NORMAL                                      ;
 ;     -- PLL_TYPE               ; AUTO                                        ;
 ;     -- PRIMARY_CLOCK          ; INCLK0                                      ;
@@ -996,42 +871,33 @@ Note: In order to hide this table in the UI and the text report file, please set
 +-------------------------------+---------------------------------------------+
 
 
-+--------------------------------------------------------------------------------------------------------+
-; altsyncram Parameter Settings by Entity Instance                                                       ;
-+-------------------------------------------+------------------------------------------------------------+
-; Name                                      ; Value                                                      ;
-+-------------------------------------------+------------------------------------------------------------+
-; Number of entity instances                ; 1                                                          ;
-; Entity Instance                           ; image_loader:img_loader|image_rom:rom|altsyncram:mem_rtl_0 ;
-;     -- OPERATION_MODE                     ; ROM                                                        ;
-;     -- WIDTH_A                            ; 3                                                          ;
-;     -- NUMWORDS_A                         ; 76800                                                      ;
-;     -- OUTDATA_REG_A                      ; UNREGISTERED                                               ;
-;     -- WIDTH_B                            ; 1                                                          ;
-;     -- NUMWORDS_B                         ; 1                                                          ;
-;     -- ADDRESS_REG_B                      ; CLOCK1                                                     ;
-;     -- OUTDATA_REG_B                      ; UNREGISTERED                                               ;
-;     -- RAM_BLOCK_TYPE                     ; AUTO                                                       ;
-;     -- READ_DURING_WRITE_MODE_MIXED_PORTS ; DONT_CARE                                                  ;
-+-------------------------------------------+------------------------------------------------------------+
++--------------------------------------------------------------------------------+
+; altsyncram Parameter Settings by Entity Instance                               ;
++-------------------------------------------+------------------------------------+
+; Name                                      ; Value                              ;
++-------------------------------------------+------------------------------------+
+; Number of entity instances                ; 1                                  ;
+; Entity Instance                           ; image_rom:rom|altsyncram:mem_rtl_0 ;
+;     -- OPERATION_MODE                     ; ROM                                ;
+;     -- WIDTH_A                            ; 3                                  ;
+;     -- NUMWORDS_A                         ; 76800                              ;
+;     -- OUTDATA_REG_A                      ; UNREGISTERED                       ;
+;     -- WIDTH_B                            ; 1                                  ;
+;     -- NUMWORDS_B                         ; 1                                  ;
+;     -- ADDRESS_REG_B                      ; CLOCK1                             ;
+;     -- OUTDATA_REG_B                      ; UNREGISTERED                       ;
+;     -- RAM_BLOCK_TYPE                     ; AUTO                               ;
+;     -- READ_DURING_WRITE_MODE_MIXED_PORTS ; DONT_CARE                          ;
++-------------------------------------------+------------------------------------+
 
 
 +-----------------------------------------------------------------------------------------------------------------------+
-; Port Connectivity Checks: "vga_frame_reader:frame_reader"                                                             ;
+; Port Connectivity Checks: "vga_display_controller:vga_timing"                                                         ;
 +-------------+--------+----------+-------------------------------------------------------------------------------------+
 ; Port        ; Type   ; Severity ; Details                                                                             ;
 +-------------+--------+----------+-------------------------------------------------------------------------------------+
-; frame_ready ; Output ; Info     ; Connected to dangling logic. Logic that only feeds a dangling port will be removed. ;
+; frame_start ; Output ; Info     ; Connected to dangling logic. Logic that only feeds a dangling port will be removed. ;
 +-------------+--------+----------+-------------------------------------------------------------------------------------+
-
-
-+-----------------------------------------------------+
-; Port Connectivity Checks: "image_loader:img_loader" ;
-+-------------+-------+----------+--------------------+
-; Port        ; Type  ; Severity ; Details            ;
-+-------------+-------+----------+--------------------+
-; sdram_ready ; Input ; Info     ; Stuck at VCC       ;
-+-------------+-------+----------+--------------------+
 
 
 +-----------------------------------------------------+
@@ -1039,31 +905,28 @@ Note: In order to hide this table in the UI and the text report file, please set
 +-----------------------+-----------------------------+
 ; Type                  ; Count                       ;
 +-----------------------+-----------------------------+
-; boundary_port         ; 50                          ;
-; cycloneiii_ff         ; 1889                        ;
-;     CLR               ; 203                         ;
-;     CLR SCLR          ; 38                          ;
-;     ENA               ; 1539                        ;
-;     ENA CLR           ; 30                          ;
-;     ENA CLR SCLR      ; 69                          ;
-;     ENA CLR SLD       ; 5                           ;
+; boundary_port         ; 49                          ;
+; cycloneiii_ff         ; 134                         ;
+;     CLR               ; 49                          ;
+;     CLR SCLR          ; 16                          ;
+;     ENA CLR           ; 64                          ;
 ;     plain             ; 5                           ;
 ; cycloneiii_io_obuf    ; 16                          ;
-; cycloneiii_lcell_comb ; 2140                        ;
-;     arith             ; 188                         ;
-;         2 data inputs ; 176                         ;
-;         3 data inputs ; 12                          ;
-;     normal            ; 1952                        ;
+; cycloneiii_lcell_comb ; 263                         ;
+;     arith             ; 88                          ;
+;         2 data inputs ; 74                          ;
+;         3 data inputs ; 14                          ;
+;     normal            ; 175                         ;
 ;         0 data inputs ; 3                           ;
-;         1 data inputs ; 24                          ;
-;         2 data inputs ; 51                          ;
-;         3 data inputs ; 54                          ;
-;         4 data inputs ; 1820                        ;
+;         1 data inputs ; 7                           ;
+;         2 data inputs ; 27                          ;
+;         3 data inputs ; 22                          ;
+;         4 data inputs ; 116                         ;
 ; cycloneiii_pll        ; 1                           ;
 ; cycloneiii_ram_block  ; 30                          ;
 ;                       ;                             ;
-; Max LUT depth         ; 9.90                        ;
-; Average LUT depth     ; 5.83                        ;
+; Max LUT depth         ; 5.00                        ;
+; Average LUT depth     ; 2.51                        ;
 +-----------------------+-----------------------------+
 
 
@@ -1072,7 +935,7 @@ Note: In order to hide this table in the UI and the text report file, please set
 +----------------+--------------+
 ; Partition Name ; Elapsed Time ;
 +----------------+--------------+
-; Top            ; 00:00:04     ;
+; Top            ; 00:00:02     ;
 +----------------+--------------+
 
 
@@ -1081,65 +944,64 @@ Note: In order to hide this table in the UI and the text report file, please set
 +-------------------------------+
 Info: *******************************************************************
 Info: Running Quartus Prime Analysis & Synthesis
-    Info: Version 18.1.0 Build 625 09/12/2018 SJ Standard Edition
-    Info: Processing started: Tue Aug 12 15:57:13 2025
+    Info: Version 20.1.1 Build 720 11/11/2020 SJ Lite Edition
+    Info: Processing started: Mon Aug 25 16:58:36 2025
 Info: Command: quartus_map --read_settings_files=on --write_settings_files=off pfa_sensor_fusion -c pfa_sensor_fusion
 Warning (18236): Number of processors has not been specified which may cause overloading on shared machines.  Set the global assignment NUM_PARALLEL_PROCESSORS in your QSF to an appropriate value for best performance.
-Info (20030): Parallel compilation is enabled and will use 12 of the 12 processors detected
+Info (20030): Parallel compilation is enabled and will use 4 of the 4 processors detected
 Info (12021): Found 1 design units, including 1 entities, in source file src/vga_test_pattern.sv
-    Info (12023): Found entity 1: vga_test_pattern File: C:/epsilon/5tudies/AIAC/Stages/Cap PFA 2A/Project/fpga-bev/src/vga_test_pattern.sv Line: 1
+    Info (12023): Found entity 1: vga_test_pattern File: C:/Users/aelmezia/Desktop/PFA 1/Project/src/vga_test_pattern.sv Line: 1
 Info (12021): Found 1 design units, including 1 entities, in source file src/vga_test_top.sv
-    Info (12023): Found entity 1: vga_test_top File: C:/epsilon/5tudies/AIAC/Stages/Cap PFA 2A/Project/fpga-bev/src/vga_test_top.sv Line: 1
+    Info (12023): Found entity 1: vga_test_top File: C:/Users/aelmezia/Desktop/PFA 1/Project/src/vga_test_top.sv Line: 1
+Warning (10335): Unrecognized synthesis attribute "rom_style" at src/image_rom.sv(7) File: C:/Users/aelmezia/Desktop/PFA 1/Project/src/image_rom.sv Line: 7
 Info (12021): Found 1 design units, including 1 entities, in source file src/image_rom.sv
-    Info (12023): Found entity 1: image_rom File: C:/epsilon/5tudies/AIAC/Stages/Cap PFA 2A/Project/fpga-bev/src/image_rom.sv Line: 1
+    Info (12023): Found entity 1: image_rom File: C:/Users/aelmezia/Desktop/PFA 1/Project/src/image_rom.sv Line: 1
 Info (12021): Found 1 design units, including 1 entities, in source file src/sdram_init_fsm.sv
-    Info (12023): Found entity 1: sdram_init_fsm File: C:/epsilon/5tudies/AIAC/Stages/Cap PFA 2A/Project/fpga-bev/src/sdram_init_fsm.sv Line: 1
+    Info (12023): Found entity 1: sdram_init_fsm File: C:/Users/aelmezia/Desktop/PFA 1/Project/src/sdram_init_fsm.sv Line: 1
 Info (12021): Found 1 design units, including 1 entities, in source file src/button_led_test_top.sv
-    Info (12023): Found entity 1: button_led_test_top File: C:/epsilon/5tudies/AIAC/Stages/Cap PFA 2A/Project/fpga-bev/src/button_led_test_top.sv Line: 1
+    Info (12023): Found entity 1: button_led_test_top File: C:/Users/aelmezia/Desktop/PFA 1/Project/src/button_led_test_top.sv Line: 1
 Warning (12019): Can't analyze file -- file src/sdram_test_top.sv is missing
 Warning (12019): Can't analyze file -- file src/sdram_rw_fsm.sv is missing
 Info (12021): Found 1 design units, including 1 entities, in source file src/sdram_to_vga_reader.sv
-    Info (12023): Found entity 1: sdram_to_vga_reader File: C:/epsilon/5tudies/AIAC/Stages/Cap PFA 2A/Project/fpga-bev/src/sdram_to_vga_reader.sv Line: 1
+    Info (12023): Found entity 1: sdram_to_vga_reader File: C:/Users/aelmezia/Desktop/PFA 1/Project/src/sdram_to_vga_reader.sv Line: 1
 Info (12021): Found 1 design units, including 1 entities, in source file src/rom_to_sdram_writer.sv
-    Info (12023): Found entity 1: rom_to_sdram_writer File: C:/epsilon/5tudies/AIAC/Stages/Cap PFA 2A/Project/fpga-bev/src/rom_to_sdram_writer.sv Line: 1
+    Info (12023): Found entity 1: rom_to_sdram_writer File: C:/Users/aelmezia/Desktop/PFA 1/Project/src/rom_to_sdram_writer.sv Line: 1
 Info (12021): Found 1 design units, including 1 entities, in source file src/top_sdram_vga.sv
-    Info (12023): Found entity 1: top_sdram_vga File: C:/epsilon/5tudies/AIAC/Stages/Cap PFA 2A/Project/fpga-bev/src/top_sdram_vga.sv Line: 1
+    Info (12023): Found entity 1: top_sdram_vga File: C:/Users/aelmezia/Desktop/PFA 1/Project/src/top_sdram_vga.sv Line: 1
 Info (12021): Found 1 design units, including 1 entities, in source file src/clock_divider.sv
-    Info (12023): Found entity 1: clock_divider File: C:/epsilon/5tudies/AIAC/Stages/Cap PFA 2A/Project/fpga-bev/src/clock_divider.sv Line: 1
+    Info (12023): Found entity 1: clock_divider File: C:/Users/aelmezia/Desktop/PFA 1/Project/src/clock_divider.sv Line: 1
 Info (12021): Found 1 design units, including 1 entities, in source file src/vga_controller.sv
-    Info (12023): Found entity 1: vga_controller File: C:/epsilon/5tudies/AIAC/Stages/Cap PFA 2A/Project/fpga-bev/src/vga_controller.sv Line: 1
+    Info (12023): Found entity 1: vga_controller File: C:/Users/aelmezia/Desktop/PFA 1/Project/src/vga_controller.sv Line: 1
 Info (12021): Found 1 design units, including 1 entities, in source file output_files/image_loader.sv
-    Info (12023): Found entity 1: image_loader File: C:/epsilon/5tudies/AIAC/Stages/Cap PFA 2A/Project/fpga-bev/output_files/image_loader.sv Line: 4
+    Info (12023): Found entity 1: image_loader File: C:/Users/aelmezia/Desktop/PFA 1/Project/output_files/image_loader.sv Line: 1
 Info (12021): Found 1 design units, including 1 entities, in source file output_files/vga_frame_reader.sv
-    Info (12023): Found entity 1: vga_frame_reader File: C:/epsilon/5tudies/AIAC/Stages/Cap PFA 2A/Project/fpga-bev/output_files/vga_frame_reader.sv Line: 1
+    Info (12023): Found entity 1: vga_frame_reader File: C:/Users/aelmezia/Desktop/PFA 1/Project/output_files/vga_frame_reader.sv Line: 1
 Info (12021): Found 1 design units, including 1 entities, in source file output_files/top_sdram_vga_system.sv
-    Info (12023): Found entity 1: top_sdram_vga_system File: C:/epsilon/5tudies/AIAC/Stages/Cap PFA 2A/Project/fpga-bev/output_files/top_sdram_vga_system.sv Line: 5
+    Info (12023): Found entity 1: top_sdram_vga_system File: C:/Users/aelmezia/Desktop/PFA 1/Project/output_files/top_sdram_vga_system.sv Line: 1
 Info (12021): Found 1 design units, including 1 entities, in source file output_files/sdram_controller.sv
-    Info (12023): Found entity 1: sdram_controller File: C:/epsilon/5tudies/AIAC/Stages/Cap PFA 2A/Project/fpga-bev/output_files/sdram_controller.sv Line: 5
+    Info (12023): Found entity 1: sdram_controller File: C:/Users/aelmezia/Desktop/PFA 1/Project/output_files/sdram_controller.sv Line: 1
 Info (12021): Found 1 design units, including 1 entities, in source file output_files/fifo_buffer.sv
-    Info (12023): Found entity 1: fifo_buffer File: C:/epsilon/5tudies/AIAC/Stages/Cap PFA 2A/Project/fpga-bev/output_files/fifo_buffer.sv Line: 4
+    Info (12023): Found entity 1: fifo_buffer File: C:/Users/aelmezia/Desktop/PFA 1/Project/output_files/fifo_buffer.sv Line: 4
 Info (12021): Found 1 design units, including 1 entities, in source file output_files/vga_display_controller.sv
-    Info (12023): Found entity 1: vga_display_controller File: C:/epsilon/5tudies/AIAC/Stages/Cap PFA 2A/Project/fpga-bev/output_files/vga_display_controller.sv Line: 1
+    Info (12023): Found entity 1: vga_display_controller File: C:/Users/aelmezia/Desktop/PFA 1/Project/output_files/vga_display_controller.sv Line: 1
 Info (12021): Found 1 design units, including 1 entities, in source file output_files/led_debug_test.sv
-    Info (12023): Found entity 1: led_debug_test File: C:/epsilon/5tudies/AIAC/Stages/Cap PFA 2A/Project/fpga-bev/output_files/led_debug_test.sv Line: 4
+    Info (12023): Found entity 1: led_debug_test File: C:/Users/aelmezia/Desktop/PFA 1/Project/output_files/led_debug_test.sv Line: 4
+Info (12021): Found 1 design units, including 1 entities, in source file pll_143mhz.v
+    Info (12023): Found entity 1: pll_143MHz File: C:/Users/aelmezia/Desktop/PFA 1/Project/pll_143MHz.v Line: 40
 Info (12127): Elaborating entity "top_sdram_vga_system" for the top level hierarchy
-Warning (10230): Verilog HDL assignment warning at top_sdram_vga_system.sv(124): truncated value with size 32 to match size of target (24) File: C:/epsilon/5tudies/AIAC/Stages/Cap PFA 2A/Project/fpga-bev/output_files/top_sdram_vga_system.sv Line: 124
-Info (10264): Verilog HDL Case Statement information at top_sdram_vga_system.sv(319): all case item expressions in this case statement are onehot File: C:/epsilon/5tudies/AIAC/Stages/Cap PFA 2A/Project/fpga-bev/output_files/top_sdram_vga_system.sv Line: 319
-Warning (12125): Using design file pll_133mhz.v, which is not specified as a design file for the current project, but contains definitions for 1 design units and 1 entities in project
-    Info (12023): Found entity 1: pll_133Mhz File: C:/epsilon/5tudies/AIAC/Stages/Cap PFA 2A/Project/fpga-bev/pll_133mhz.v Line: 40
-Info (12128): Elaborating entity "pll_133Mhz" for hierarchy "pll_133Mhz:pll_inst" File: C:/epsilon/5tudies/AIAC/Stages/Cap PFA 2A/Project/fpga-bev/output_files/top_sdram_vga_system.sv Line: 44
-Info (12128): Elaborating entity "altpll" for hierarchy "pll_133Mhz:pll_inst|altpll:altpll_component" File: C:/epsilon/5tudies/AIAC/Stages/Cap PFA 2A/Project/fpga-bev/pll_133mhz.v Line: 104
-Info (12130): Elaborated megafunction instantiation "pll_133Mhz:pll_inst|altpll:altpll_component" File: C:/epsilon/5tudies/AIAC/Stages/Cap PFA 2A/Project/fpga-bev/pll_133mhz.v Line: 104
-Info (12133): Instantiated megafunction "pll_133Mhz:pll_inst|altpll:altpll_component" with the following parameter: File: C:/epsilon/5tudies/AIAC/Stages/Cap PFA 2A/Project/fpga-bev/pll_133mhz.v Line: 104
+Info (12128): Elaborating entity "pll_143MHz" for hierarchy "pll_143MHz:pll_inst" File: C:/Users/aelmezia/Desktop/PFA 1/Project/output_files/top_sdram_vga_system.sv Line: 53
+Info (12128): Elaborating entity "altpll" for hierarchy "pll_143MHz:pll_inst|altpll:altpll_component" File: C:/Users/aelmezia/Desktop/PFA 1/Project/pll_143MHz.v Line: 104
+Info (12130): Elaborated megafunction instantiation "pll_143MHz:pll_inst|altpll:altpll_component" File: C:/Users/aelmezia/Desktop/PFA 1/Project/pll_143MHz.v Line: 104
+Info (12133): Instantiated megafunction "pll_143MHz:pll_inst|altpll:altpll_component" with the following parameter: File: C:/Users/aelmezia/Desktop/PFA 1/Project/pll_143MHz.v Line: 104
     Info (12134): Parameter "bandwidth_type" = "AUTO"
     Info (12134): Parameter "clk0_divide_by" = "50"
     Info (12134): Parameter "clk0_duty_cycle" = "50"
-    Info (12134): Parameter "clk0_multiply_by" = "133"
+    Info (12134): Parameter "clk0_multiply_by" = "143"
     Info (12134): Parameter "clk0_phase_shift" = "0"
     Info (12134): Parameter "compensate_clock" = "CLK0"
     Info (12134): Parameter "inclk0_input_frequency" = "20000"
     Info (12134): Parameter "intended_device_family" = "Cyclone IV E"
-    Info (12134): Parameter "lpm_hint" = "CBX_MODULE_PREFIX=pll_133Mhz"
+    Info (12134): Parameter "lpm_hint" = "CBX_MODULE_PREFIX=pll_143MHz"
     Info (12134): Parameter "lpm_type" = "altpll"
     Info (12134): Parameter "operation_mode" = "NORMAL"
     Info (12134): Parameter "pll_type" = "AUTO"
@@ -1186,36 +1048,37 @@ Info (12133): Instantiated megafunction "pll_133Mhz:pll_inst|altpll:altpll_compo
     Info (12134): Parameter "port_extclk3" = "PORT_UNUSED"
     Info (12134): Parameter "self_reset_on_loss_lock" = "OFF"
     Info (12134): Parameter "width_clock" = "5"
-Info (12021): Found 1 design units, including 1 entities, in source file db/pll_133mhz_altpll.v
-    Info (12023): Found entity 1: pll_133Mhz_altpll File: C:/epsilon/5tudies/AIAC/Stages/Cap PFA 2A/Project/fpga-bev/db/pll_133mhz_altpll.v Line: 30
-Info (12128): Elaborating entity "pll_133Mhz_altpll" for hierarchy "pll_133Mhz:pll_inst|altpll:altpll_component|pll_133Mhz_altpll:auto_generated" File: c:/intelfpga/18.1/quartus/libraries/megafunctions/altpll.tdf Line: 897
-Info (12128): Elaborating entity "sdram_controller" for hierarchy "sdram_controller:sdram_ctrl" File: C:/epsilon/5tudies/AIAC/Stages/Cap PFA 2A/Project/fpga-bev/output_files/top_sdram_vga_system.sv Line: 198
-Warning (10230): Verilog HDL assignment warning at sdram_controller.sv(235): truncated value with size 32 to match size of target (12) File: C:/epsilon/5tudies/AIAC/Stages/Cap PFA 2A/Project/fpga-bev/output_files/sdram_controller.sv Line: 235
-Warning (10230): Verilog HDL assignment warning at sdram_controller.sv(248): truncated value with size 32 to match size of target (12) File: C:/epsilon/5tudies/AIAC/Stages/Cap PFA 2A/Project/fpga-bev/output_files/sdram_controller.sv Line: 248
-Info (10264): Verilog HDL Case Statement information at sdram_controller.sv(120): all case item expressions in this case statement are onehot File: C:/epsilon/5tudies/AIAC/Stages/Cap PFA 2A/Project/fpga-bev/output_files/sdram_controller.sv Line: 120
-Warning (10230): Verilog HDL assignment warning at sdram_controller.sv(288): truncated value with size 32 to match size of target (16) File: C:/epsilon/5tudies/AIAC/Stages/Cap PFA 2A/Project/fpga-bev/output_files/sdram_controller.sv Line: 288
-Warning (10230): Verilog HDL assignment warning at sdram_controller.sv(300): truncated value with size 32 to match size of target (11) File: C:/epsilon/5tudies/AIAC/Stages/Cap PFA 2A/Project/fpga-bev/output_files/sdram_controller.sv Line: 300
-Warning (10230): Verilog HDL assignment warning at sdram_controller.sv(306): truncated value with size 32 to match size of target (11) File: C:/epsilon/5tudies/AIAC/Stages/Cap PFA 2A/Project/fpga-bev/output_files/sdram_controller.sv Line: 306
-Warning (10230): Verilog HDL assignment warning at sdram_controller.sv(316): truncated value with size 32 to match size of target (8) File: C:/epsilon/5tudies/AIAC/Stages/Cap PFA 2A/Project/fpga-bev/output_files/sdram_controller.sv Line: 316
-Warning (10230): Verilog HDL assignment warning at sdram_controller.sv(324): truncated value with size 32 to match size of target (8) File: C:/epsilon/5tudies/AIAC/Stages/Cap PFA 2A/Project/fpga-bev/output_files/sdram_controller.sv Line: 324
-Info (12128): Elaborating entity "image_loader" for hierarchy "image_loader:img_loader" File: C:/epsilon/5tudies/AIAC/Stages/Cap PFA 2A/Project/fpga-bev/output_files/top_sdram_vga_system.sv Line: 223
-Warning (10230): Verilog HDL assignment warning at image_loader.sv(93): truncated value with size 32 to match size of target (18) File: C:/epsilon/5tudies/AIAC/Stages/Cap PFA 2A/Project/fpga-bev/output_files/image_loader.sv Line: 93
-Info (12128): Elaborating entity "image_rom" for hierarchy "image_loader:img_loader|image_rom:rom" File: C:/epsilon/5tudies/AIAC/Stages/Cap PFA 2A/Project/fpga-bev/output_files/image_loader.sv Line: 54
-Warning (10030): Net "mem.data_a" at image_rom.sv(7) has no driver or initial value, using a default initial value '0' File: C:/epsilon/5tudies/AIAC/Stages/Cap PFA 2A/Project/fpga-bev/src/image_rom.sv Line: 7
-Warning (10030): Net "mem.waddr_a" at image_rom.sv(7) has no driver or initial value, using a default initial value '0' File: C:/epsilon/5tudies/AIAC/Stages/Cap PFA 2A/Project/fpga-bev/src/image_rom.sv Line: 7
-Warning (10030): Net "mem.we_a" at image_rom.sv(7) has no driver or initial value, using a default initial value '0' File: C:/epsilon/5tudies/AIAC/Stages/Cap PFA 2A/Project/fpga-bev/src/image_rom.sv Line: 7
-Info (12128): Elaborating entity "vga_display_controller" for hierarchy "vga_display_controller:vga_ctrl" File: C:/epsilon/5tudies/AIAC/Stages/Cap PFA 2A/Project/fpga-bev/output_files/top_sdram_vga_system.sv Line: 252
-Warning (10230): Verilog HDL assignment warning at vga_display_controller.sv(53): truncated value with size 32 to match size of target (10) File: C:/epsilon/5tudies/AIAC/Stages/Cap PFA 2A/Project/fpga-bev/output_files/vga_display_controller.sv Line: 53
-Warning (10230): Verilog HDL assignment warning at vga_display_controller.sv(56): truncated value with size 32 to match size of target (10) File: C:/epsilon/5tudies/AIAC/Stages/Cap PFA 2A/Project/fpga-bev/output_files/vga_display_controller.sv Line: 56
-Info (12128): Elaborating entity "fifo_buffer" for hierarchy "fifo_buffer:pixel_fifo" File: C:/epsilon/5tudies/AIAC/Stages/Cap PFA 2A/Project/fpga-bev/output_files/top_sdram_vga_system.sv Line: 275
-Info (12128): Elaborating entity "vga_frame_reader" for hierarchy "vga_frame_reader:frame_reader" File: C:/epsilon/5tudies/AIAC/Stages/Cap PFA 2A/Project/fpga-bev/output_files/top_sdram_vga_system.sv Line: 308
-Warning (10230): Verilog HDL assignment warning at vga_frame_reader.sv(169): truncated value with size 32 to match size of target (18) File: C:/epsilon/5tudies/AIAC/Stages/Cap PFA 2A/Project/fpga-bev/output_files/vga_frame_reader.sv Line: 169
-Warning (10230): Verilog HDL assignment warning at vga_frame_reader.sv(174): truncated value with size 32 to match size of target (10) File: C:/epsilon/5tudies/AIAC/Stages/Cap PFA 2A/Project/fpga-bev/output_files/vga_frame_reader.sv Line: 174
-Warning (10230): Verilog HDL assignment warning at vga_frame_reader.sv(176): truncated value with size 32 to match size of target (10) File: C:/epsilon/5tudies/AIAC/Stages/Cap PFA 2A/Project/fpga-bev/output_files/vga_frame_reader.sv Line: 176
-Info (10264): Verilog HDL Case Statement information at vga_frame_reader.sv(155): all case item expressions in this case statement are onehot File: C:/epsilon/5tudies/AIAC/Stages/Cap PFA 2A/Project/fpga-bev/output_files/vga_frame_reader.sv Line: 155
-Info (10264): Verilog HDL Case Statement information at vga_frame_reader.sv(196): all case item expressions in this case statement are onehot File: C:/epsilon/5tudies/AIAC/Stages/Cap PFA 2A/Project/fpga-bev/output_files/vga_frame_reader.sv Line: 196
+Info (12021): Found 1 design units, including 1 entities, in source file db/pll_143mhz_altpll.v
+    Info (12023): Found entity 1: pll_143MHz_altpll File: C:/Users/aelmezia/Desktop/PFA 1/Project/db/pll_143mhz_altpll.v Line: 31
+Info (12128): Elaborating entity "pll_143MHz_altpll" for hierarchy "pll_143MHz:pll_inst|altpll:altpll_component|pll_143MHz_altpll:auto_generated" File: c:/intelfpga_lite/20.1/quartus/libraries/megafunctions/altpll.tdf Line: 898
+Info (12128): Elaborating entity "vga_display_controller" for hierarchy "vga_display_controller:vga_timing" File: C:/Users/aelmezia/Desktop/PFA 1/Project/output_files/top_sdram_vga_system.sv Line: 113
+Warning (10230): Verilog HDL assignment warning at vga_display_controller.sv(54): truncated value with size 32 to match size of target (10) File: C:/Users/aelmezia/Desktop/PFA 1/Project/output_files/vga_display_controller.sv Line: 54
+Warning (10230): Verilog HDL assignment warning at vga_display_controller.sv(56): truncated value with size 32 to match size of target (10) File: C:/Users/aelmezia/Desktop/PFA 1/Project/output_files/vga_display_controller.sv Line: 56
+Info (12128): Elaborating entity "vga_frame_reader" for hierarchy "vga_frame_reader:reader" File: C:/Users/aelmezia/Desktop/PFA 1/Project/output_files/top_sdram_vga_system.sv Line: 135
+Warning (10036): Verilog HDL or VHDL warning at vga_frame_reader.sv(32): object "x_d" assigned a value but never read File: C:/Users/aelmezia/Desktop/PFA 1/Project/output_files/vga_frame_reader.sv Line: 32
+Warning (10036): Verilog HDL or VHDL warning at vga_frame_reader.sv(32): object "y_d" assigned a value but never read File: C:/Users/aelmezia/Desktop/PFA 1/Project/output_files/vga_frame_reader.sv Line: 32
+Warning (10036): Verilog HDL or VHDL warning at vga_frame_reader.sv(34): object "read_pending" assigned a value but never read File: C:/Users/aelmezia/Desktop/PFA 1/Project/output_files/vga_frame_reader.sv Line: 34
+Warning (10230): Verilog HDL assignment warning at vga_frame_reader.sv(68): truncated value with size 32 to match size of target (20) File: C:/Users/aelmezia/Desktop/PFA 1/Project/output_files/vga_frame_reader.sv Line: 68
+Info (12128): Elaborating entity "sdram_controller" for hierarchy "sdram_controller:sdram_ctrl" File: C:/Users/aelmezia/Desktop/PFA 1/Project/output_files/top_sdram_vga_system.sv Line: 179
+Warning (10230): Verilog HDL assignment warning at sdram_controller.sv(90): truncated value with size 32 to match size of target (16) File: C:/Users/aelmezia/Desktop/PFA 1/Project/output_files/sdram_controller.sv Line: 90
+Warning (10230): Verilog HDL assignment warning at sdram_controller.sv(121): truncated value with size 32 to match size of target (3) File: C:/Users/aelmezia/Desktop/PFA 1/Project/output_files/sdram_controller.sv Line: 121
+Warning (10230): Verilog HDL assignment warning at sdram_controller.sv(133): truncated value with size 32 to match size of target (3) File: C:/Users/aelmezia/Desktop/PFA 1/Project/output_files/sdram_controller.sv Line: 133
+Warning (10230): Verilog HDL assignment warning at sdram_controller.sv(138): truncated value with size 32 to match size of target (20) File: C:/Users/aelmezia/Desktop/PFA 1/Project/output_files/sdram_controller.sv Line: 138
+Warning (10230): Verilog HDL assignment warning at sdram_controller.sv(173): truncated value with size 32 to match size of target (3) File: C:/Users/aelmezia/Desktop/PFA 1/Project/output_files/sdram_controller.sv Line: 173
+Warning (10230): Verilog HDL assignment warning at sdram_controller.sv(185): truncated value with size 32 to match size of target (3) File: C:/Users/aelmezia/Desktop/PFA 1/Project/output_files/sdram_controller.sv Line: 185
+Info (10264): Verilog HDL Case Statement information at sdram_controller.sv(234): all case item expressions in this case statement are onehot File: C:/Users/aelmezia/Desktop/PFA 1/Project/output_files/sdram_controller.sv Line: 234
+Warning (10270): Verilog HDL Case Statement warning at sdram_controller.sv(263): incomplete case statement has no default case item File: C:/Users/aelmezia/Desktop/PFA 1/Project/output_files/sdram_controller.sv Line: 263
+Info (10264): Verilog HDL Case Statement information at sdram_controller.sv(263): all case item expressions in this case statement are onehot File: C:/Users/aelmezia/Desktop/PFA 1/Project/output_files/sdram_controller.sv Line: 263
+Warning (10270): Verilog HDL Case Statement warning at sdram_controller.sv(285): incomplete case statement has no default case item File: C:/Users/aelmezia/Desktop/PFA 1/Project/output_files/sdram_controller.sv Line: 285
+Info (10264): Verilog HDL Case Statement information at sdram_controller.sv(285): all case item expressions in this case statement are onehot File: C:/Users/aelmezia/Desktop/PFA 1/Project/output_files/sdram_controller.sv Line: 285
+Info (12128): Elaborating entity "image_rom" for hierarchy "image_rom:rom" File: C:/Users/aelmezia/Desktop/PFA 1/Project/output_files/top_sdram_vga_system.sv Line: 191
+Warning (10030): Net "mem.data_a" at image_rom.sv(7) has no driver or initial value, using a default initial value '0' File: C:/Users/aelmezia/Desktop/PFA 1/Project/src/image_rom.sv Line: 7
+Warning (10030): Net "mem.waddr_a" at image_rom.sv(7) has no driver or initial value, using a default initial value '0' File: C:/Users/aelmezia/Desktop/PFA 1/Project/src/image_rom.sv Line: 7
+Warning (10030): Net "mem.we_a" at image_rom.sv(7) has no driver or initial value, using a default initial value '0' File: C:/Users/aelmezia/Desktop/PFA 1/Project/src/image_rom.sv Line: 7
+Info (12128): Elaborating entity "image_loader" for hierarchy "image_loader:loader" File: C:/Users/aelmezia/Desktop/PFA 1/Project/output_files/top_sdram_vga_system.sv Line: 214
+Warning (10230): Verilog HDL assignment warning at image_loader.sv(59): truncated value with size 32 to match size of target (17) File: C:/Users/aelmezia/Desktop/PFA 1/Project/output_files/image_loader.sv Line: 59
 Info (19000): Inferred 1 megafunctions from design logic
-    Info (276029): Inferred altsyncram megafunction from the following design logic: "image_loader:img_loader|image_rom:rom|mem_rtl_0" 
+    Info (276029): Inferred altsyncram megafunction from the following design logic: "image_rom:rom|mem_rtl_0" 
         Info (286033): Parameter OPERATION_MODE set to ROM
         Info (286033): Parameter WIDTH_A set to 3
         Info (286033): Parameter WIDTHAD_A set to 17
@@ -1226,8 +1089,8 @@ Info (19000): Inferred 1 megafunctions from design logic
         Info (286033): Parameter INDATA_ACLR_A set to NONE
         Info (286033): Parameter WRCONTROL_ACLR_A set to NONE
         Info (286033): Parameter INIT_FILE set to db/pfa_sensor_fusion.ram0_image_rom_4a2579ac.hdl.mif
-Info (12130): Elaborated megafunction instantiation "image_loader:img_loader|image_rom:rom|altsyncram:mem_rtl_0"
-Info (12133): Instantiated megafunction "image_loader:img_loader|image_rom:rom|altsyncram:mem_rtl_0" with the following parameter:
+Info (12130): Elaborated megafunction instantiation "image_rom:rom|altsyncram:mem_rtl_0"
+Info (12133): Instantiated megafunction "image_rom:rom|altsyncram:mem_rtl_0" with the following parameter:
     Info (12134): Parameter "OPERATION_MODE" = "ROM"
     Info (12134): Parameter "WIDTH_A" = "3"
     Info (12134): Parameter "WIDTHAD_A" = "17"
@@ -1239,35 +1102,42 @@ Info (12133): Instantiated megafunction "image_loader:img_loader|image_rom:rom|a
     Info (12134): Parameter "WRCONTROL_ACLR_A" = "NONE"
     Info (12134): Parameter "INIT_FILE" = "db/pfa_sensor_fusion.ram0_image_rom_4a2579ac.hdl.mif"
 Info (12021): Found 1 design units, including 1 entities, in source file db/altsyncram_sa81.tdf
-    Info (12023): Found entity 1: altsyncram_sa81 File: C:/epsilon/5tudies/AIAC/Stages/Cap PFA 2A/Project/fpga-bev/db/altsyncram_sa81.tdf Line: 31
+    Info (12023): Found entity 1: altsyncram_sa81 File: C:/Users/aelmezia/Desktop/PFA 1/Project/db/altsyncram_sa81.tdf Line: 32
 Info (12021): Found 1 design units, including 1 entities, in source file db/decode_u9a.tdf
-    Info (12023): Found entity 1: decode_u9a File: C:/epsilon/5tudies/AIAC/Stages/Cap PFA 2A/Project/fpga-bev/db/decode_u9a.tdf Line: 22
+    Info (12023): Found entity 1: decode_u9a File: C:/Users/aelmezia/Desktop/PFA 1/Project/db/decode_u9a.tdf Line: 23
 Info (12021): Found 1 design units, including 1 entities, in source file db/mux_gob.tdf
-    Info (12023): Found entity 1: mux_gob File: C:/epsilon/5tudies/AIAC/Stages/Cap PFA 2A/Project/fpga-bev/db/mux_gob.tdf Line: 22
-Info (13000): Registers with preset signals will power-up high File: C:/epsilon/5tudies/AIAC/Stages/Cap PFA 2A/Project/fpga-bev/output_files/sdram_controller.sv Line: 369
-Info (13003): DEV_CLRn pin will set, and not reset, register with preset signal due to NOT Gate Push-Back
+    Info (12023): Found entity 1: mux_gob File: C:/Users/aelmezia/Desktop/PFA 1/Project/db/mux_gob.tdf Line: 23
 Warning (13024): Output pins are stuck at VCC or GND
-    Warning (13410): Pin "cke" is stuck at VCC File: C:/epsilon/5tudies/AIAC/Stages/Cap PFA 2A/Project/fpga-bev/output_files/top_sdram_vga_system.sv Line: 20
-    Warning (13410): Pin "cs_n" is stuck at GND File: C:/epsilon/5tudies/AIAC/Stages/Cap PFA 2A/Project/fpga-bev/output_files/top_sdram_vga_system.sv Line: 21
-    Warning (13410): Pin "bank[0]" is stuck at GND File: C:/epsilon/5tudies/AIAC/Stages/Cap PFA 2A/Project/fpga-bev/output_files/top_sdram_vga_system.sv Line: 26
-    Warning (13410): Pin "bank[1]" is stuck at GND File: C:/epsilon/5tudies/AIAC/Stages/Cap PFA 2A/Project/fpga-bev/output_files/top_sdram_vga_system.sv Line: 26
-    Warning (13410): Pin "udqm" is stuck at GND File: C:/epsilon/5tudies/AIAC/Stages/Cap PFA 2A/Project/fpga-bev/output_files/top_sdram_vga_system.sv Line: 27
-    Warning (13410): Pin "ldqm" is stuck at GND File: C:/epsilon/5tudies/AIAC/Stages/Cap PFA 2A/Project/fpga-bev/output_files/top_sdram_vga_system.sv Line: 28
+    Warning (13410): Pin "cke" is stuck at VCC File: C:/Users/aelmezia/Desktop/PFA 1/Project/output_files/top_sdram_vga_system.sv Line: 21
+    Warning (13410): Pin "cs_n" is stuck at GND File: C:/Users/aelmezia/Desktop/PFA 1/Project/output_files/top_sdram_vga_system.sv Line: 22
+    Warning (13410): Pin "bank[0]" is stuck at GND File: C:/Users/aelmezia/Desktop/PFA 1/Project/output_files/top_sdram_vga_system.sv Line: 27
+    Warning (13410): Pin "bank[1]" is stuck at GND File: C:/Users/aelmezia/Desktop/PFA 1/Project/output_files/top_sdram_vga_system.sv Line: 27
+    Warning (13410): Pin "ldqm" is stuck at GND File: C:/Users/aelmezia/Desktop/PFA 1/Project/output_files/top_sdram_vga_system.sv Line: 29
+    Warning (13410): Pin "udqm" is stuck at GND File: C:/Users/aelmezia/Desktop/PFA 1/Project/output_files/top_sdram_vga_system.sv Line: 30
+    Warning (13410): Pin "status_leds[2]" is stuck at GND File: C:/Users/aelmezia/Desktop/PFA 1/Project/output_files/top_sdram_vga_system.sv Line: 36
+    Warning (13410): Pin "status_leds[3]" is stuck at GND File: C:/Users/aelmezia/Desktop/PFA 1/Project/output_files/top_sdram_vga_system.sv Line: 36
 Info (286030): Timing-Driven Synthesis is running
-Info (17049): 13 registers lost all their fanouts during netlist optimizations.
+Info (17049): 11 registers lost all their fanouts during netlist optimizations.
+Info (144001): Generated suppressed messages file C:/Users/aelmezia/Desktop/PFA 1/Project/output_files/pfa_sensor_fusion.map.smsg
 Info (16010): Generating hard_block partition "hard_block:auto_generated_inst"
     Info (16011): Adding 1 node(s), including 0 DDIO, 1 PLL, 0 transceiver and 0 LCELL
-Info (21057): Implemented 3865 device resources after synthesis - the final resource count might be different
-    Info (21058): Implemented 3 input pins
+Info (21057): Implemented 362 device resources after synthesis - the final resource count might be different
+    Info (21058): Implemented 2 input pins
     Info (21059): Implemented 31 output pins
     Info (21060): Implemented 16 bidirectional pins
-    Info (21061): Implemented 3784 logic cells
+    Info (21061): Implemented 282 logic cells
     Info (21064): Implemented 30 RAM segments
     Info (21065): Implemented 1 PLLs
-Info: Quartus Prime Analysis & Synthesis was successful. 0 errors, 28 warnings
-    Info: Peak virtual memory: 4852 megabytes
-    Info: Processing ended: Tue Aug 12 15:57:26 2025
-    Info: Elapsed time: 00:00:13
-    Info: Total CPU time (on all processors): 00:00:20
+Info: Quartus Prime Analysis & Synthesis was successful. 0 errors, 31 warnings
+    Info: Peak virtual memory: 4816 megabytes
+    Info: Processing ended: Mon Aug 25 16:59:12 2025
+    Info: Elapsed time: 00:00:36
+    Info: Total CPU time (on all processors): 00:00:47
+
+
++------------------------------------------+
+; Analysis & Synthesis Suppressed Messages ;
++------------------------------------------+
+The suppressed messages can be found in C:/Users/aelmezia/Desktop/PFA 1/Project/output_files/pfa_sensor_fusion.map.smsg.
 
 

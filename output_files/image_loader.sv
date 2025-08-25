@@ -1,148 +1,117 @@
-// Image Loader - Fixed version with proper state machine
-// Transfers image data from ROM to SDRAM
+module image_loader (
+    //==============================
+    // System Signals
+    //==============================
+    input  logic        clk,       // System clock
+    input  logic        rst_n,     // Active-low reset
 
-module image_loader #(
-    parameter IMG_WIDTH = 320,
-    parameter IMG_HEIGHT = 240,
-    parameter DATA_WIDTH = 16
-)(
-    input  logic rst_n,
-    input  logic clk,
-    input  logic start_loading,     // Start transferring image to SDRAM
-    input  logic sdram_ready,       // Not used - kept for compatibility
-    input  logic sdram_tx_enable,   // SDRAM requests data
-    
-    output logic [DATA_WIDTH-1:0] pixel_data,
-    output logic enable_write_mode,
-    output logic loading_complete
+    //==============================
+    // Control Interface
+    //==============================
+    input  logic        start,     // Start loading image
+    output logic        done,      // Asserted when loading is complete
+
+    //==============================
+    // ROM Interface
+    //==============================
+    output logic [16:0] rom_addr,  // Address to read from image ROM
+    input  logic [2:0]  rom_pixel, // 3-bit pixel data from ROM
+
+    //==============================
+    // SDRAM Controller Interface
+    //==============================
+    output logic        start_write,   // Triggers SDRAM write
+    output logic [15:0] pixel_data,    // Pixel data to write (zero-extended)
+    output logic        pixel_valid,   // Indicates valid pixel data
+    input  logic        write_ready    // SDRAM ready to accept write
 );
 
-    localparam IMG_SIZE = IMG_WIDTH * IMG_HEIGHT;
-    
-    // Image loading FSM
-    typedef enum logic [1:0] {
-        IDLE,
-        LOADING,
-        COMPLETE
-    } load_state_t;
-    
-    load_state_t state, next_state;
-    
-    // Pixel counter
-    logic [17:0] pixel_addr_reg, pixel_addr_next;  // 18 bits for 320x240 = 76800 pixels
-    logic [2:0] rom_pixel_data;
-    logic start_loading_latched;
-    
-    // Latch the start signal
-    always_ff @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin
-            start_loading_latched <= 1'b0;
-        end else begin
-            if (start_loading) begin
-                start_loading_latched <= 1'b1;
-            end else if (state == COMPLETE) begin
-                start_loading_latched <= 1'b0;
-            end
+//==============================
+// Internal Types & States
+//==============================
+
+// FSM States
+typedef enum logic [1:0] {
+    IDLE,        // Wait for start signal
+    LOAD,        // Load pixel from ROM and request SDRAM write
+    WAIT_WRITE,  // Wait for SDRAM to accept the write
+    DONE         // All pixels written
+} state_t;
+
+//==============================
+// Internal Registers
+//==============================
+state_t       state, next_state;   // FSM state registers
+logic [16:0]  addr_counter;        // ROM address counter (0 to 76799)
+
+//==============================
+// FSM Sequential Logic
+//==============================
+always_ff @(posedge clk or negedge rst_n) begin
+    if (!rst_n) begin
+        state         <= IDLE;
+        addr_counter  <= 17'd0;
+    end else begin
+        state <= next_state;
+
+        // Address counter increments only during LOAD → WAIT_WRITE
+        if (state == WAIT_WRITE && write_ready) begin
+            addr_counter <= addr_counter + 1;
         end
     end
-    
-    // ROM instantiation for image data
-    image_rom rom (
-        .clk(clk),
-        .addr(pixel_addr_reg),
-        .pixel(rom_pixel_data)
-    );
-    
-    // FSM next state logic
-    always_comb begin
-        next_state = state;
-        case (state)
-            IDLE: begin
-                if (start_loading || start_loading_latched) begin
-                    next_state = LOADING;
-                end
-            end
-            
-            LOADING: begin
-                if (pixel_addr_reg >= IMG_SIZE - 1) begin
-                    next_state = COMPLETE;
-                end
-            end
-            
-            COMPLETE: begin
-                if (!start_loading && !start_loading_latched) begin
-                    next_state = IDLE;  // Ready for next load
-                end
-            end
-            
-            default: next_state = IDLE;
-        endcase
-    end
-    
-    // Address counter logic
-    always_comb begin
-        pixel_addr_next = pixel_addr_reg;
-        case (state)
-            IDLE: begin
-                pixel_addr_next = 18'd0;
-            end
-            
-            LOADING: begin
-                if (sdram_tx_enable) begin
-                    if (pixel_addr_reg < IMG_SIZE - 1) begin
-                        pixel_addr_next = pixel_addr_reg + 1;
-                    end
-                end
-            end
-            
-            COMPLETE: begin
-                pixel_addr_next = 18'd0;  // Reset for next time
-            end
-            
-            default: pixel_addr_next = 18'd0;
-        endcase
-    end
-    
-    // Output logic
-    always_comb begin
-        enable_write_mode = 1'b0;
-        loading_complete = 1'b0;
-        
-        case (state)
-            IDLE: begin
-                enable_write_mode = 1'b0;
-                loading_complete = 1'b0;
-            end
-            
-            LOADING: begin
-                enable_write_mode = 1'b1;
-                loading_complete = 1'b0;
-            end
-            
-            COMPLETE: begin
-                enable_write_mode = 1'b0;
-                loading_complete = 1'b1;
-            end
-            
-            default: begin
-                enable_write_mode = 1'b0;
-                loading_complete = 1'b0;
-            end
-        endcase
-    end
-    
-    // Pad 3-bit RGB to 16-bit data (compatible with original design)
-    assign pixel_data = {13'b0, rom_pixel_data};
-    
-    // Registers
-    always_ff @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin
-            state <= IDLE;
-            pixel_addr_reg <= 18'd0;
-        end else begin
-            state <= next_state;
-            pixel_addr_reg <= pixel_addr_next;
+end
+
+//==============================
+// FSM Combinational Logic
+//==============================
+always_comb begin
+    // Default to hold state
+    next_state = state;
+
+    case (state)
+        IDLE: begin
+            if (start)
+                next_state = LOAD;
         end
-    end
+
+        LOAD: begin
+            // Wait for SDRAM to be ready before writing
+            if (write_ready)
+                next_state = WAIT_WRITE;
+        end
+
+        WAIT_WRITE: begin
+            // Move to DONE after last pixel
+            if (addr_counter == 17'd76799)
+                next_state = DONE;
+            else
+                next_state = LOAD;
+        end
+
+        DONE: begin
+            // Stay in DONE until reset
+            next_state = DONE;
+        end
+    endcase
+end
+
+//==============================
+// Output Logic
+//==============================
+
+// ROM address is driven by the internal counter
+assign rom_addr = addr_counter;
+
+// Zero-extend 3-bit pixel to 16-bit word
+assign pixel_data = {13'b0, rom_pixel};
+
+// Asserted when valid pixel is being sent to SDRAM
+assign pixel_valid = (state == LOAD);
+
+// Triggers SDRAM write (same as pixel_valid in this case)
+assign start_write = (state == LOAD);
+
+// Asserted when all pixels have been written
+assign done = (state == DONE);
 
 endmodule

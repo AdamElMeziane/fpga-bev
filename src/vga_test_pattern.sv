@@ -8,9 +8,11 @@ module vga_test_pattern (
     logic rst = 0;
 
     logic [9:0] x, y;
-    logic video_on;
+    logic [9:0] x_d, y_d;
+    logic video_on, video_on_d;
+    logic frame_start;
 
-    logic [17:0] addr;
+    logic [16:0] addr;
     logic [2:0] pixel;
 
     // VGA timing
@@ -21,11 +23,19 @@ module vga_test_pattern (
         .vsync(vsync),
         .x(x),
         .y(y),
-        .video_on(video_on)
+        .video_on(video_on),
+        .frame_start(frame_start)
     );
 
-    // Address calculation for 320×240 image
-    assign addr = (x < 320 && y < 240) ? (y * 320 + x) : 0;
+    // Delay coordinates by one cycle
+    always_ff @(posedge clk) begin
+        x_d <= x;
+        y_d <= y;
+        video_on_d <= video_on;
+    end
+
+    // Address calculation using delayed coordinates
+    assign addr = (x_d < 320 && y_d < 240) ? (y_d * 320 + x_d) : 0;
 
     image_rom rom (
         .clk(clk),
@@ -33,6 +43,7 @@ module vga_test_pattern (
         .pixel(pixel)
     );
 
-    assign rgb = (x < 320 && y < 240 && video_on) ? pixel : 3'b000;
+    // Display pixel only during visible area
+    assign rgb = (x_d < 320 && y_d < 240 && video_on_d) ? pixel : 3'b000;
 
 endmodule
