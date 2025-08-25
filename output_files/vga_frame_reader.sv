@@ -4,7 +4,7 @@ module vga_frame_reader #(
     parameter DATA_WIDTH = 16
 )(
     input  logic rst_n,
-    input  logic clk_sdram,         // 133MHz SDRAM clock
+    input  logic clk_sdram,         // 143MHz SDRAM clock
     input  logic clk_vga,           // 25MHz VGA clock
     
     // SDRAM interface
@@ -12,7 +12,7 @@ module vga_frame_reader #(
     input  logic sdram_rx_enable,   // SDRAM provides data
     input  logic [DATA_WIDTH-1:0] sdram_data,
     output logic enable_read_mode,
-    output logic [21:0] sdram_read_addr,  // CRITICAL: Added SDRAM address output
+    output logic [17:0] sdram_read_addr,  // Not used by SDRAM controller
     
     // VGA timing inputs
     input  logic frame_start,
@@ -30,25 +30,25 @@ module vga_frame_reader #(
     output logic frame_ready
 );
 
-    localparam IMG_SIZE = IMG_WIDTH * IMG_HEIGHT;
+    localparam TOTAL_PIXELS = IMG_WIDTH * IMG_HEIGHT;  // 76,800
     
     // Frame reading FSM
     typedef enum logic [2:0] {
         IDLE,
         WAIT_READY,
-        START_READ,
         READING,
-        FRAME_COMPLETE,
-        WAIT_NEXT_FRAME
+        WAIT_FRAME
     } read_state_t;
     
     read_state_t state, next_state;
     
-    // Pixel tracking - simplified
-    logic [17:0] pixels_read_reg, pixels_read_next;
-    logic reading_active;
-    logic frame_start_sync, frame_start_prev;
+    // Pixel counter
+    logic [17:0] pixel_count, pixel_count_next;
     logic sdram_ready_latched;
+    
+    // Frame synchronization
+    logic frame_start_sync1, frame_start_sync2, frame_start_prev;
+    logic frame_start_edge;
     
     // Latch sdram_ready signal
     always_ff @(posedge clk_sdram or negedge rst_n) begin
@@ -62,8 +62,6 @@ module vga_frame_reader #(
     end
     
     // Synchronize frame_start to SDRAM clock domain
-    logic frame_start_sync1, frame_start_sync2;
-    
     always_ff @(posedge clk_sdram or negedge rst_n) begin
         if (!rst_n) begin
             frame_start_sync1 <= 1'b0;
@@ -77,126 +75,79 @@ module vga_frame_reader #(
     end
     
     // Edge detect for frame start
-    assign frame_start_sync = frame_start_sync2 & ~frame_start_prev;
+    assign frame_start_edge = frame_start_sync2 & ~frame_start_prev;
     
     // FSM next state logic
     always_comb begin
         next_state = state;
+        pixel_count_next = pixel_count;
+        
         case (state)
             IDLE: begin
                 if (sdram_ready_latched) begin
                     next_state = WAIT_READY;
                 end
+                pixel_count_next = '0;
             end
             
             WAIT_READY: begin
-                if (frame_start_sync) begin
-                    next_state = START_READ;
+                if (frame_start_edge) begin
+                    next_state = READING;
+                    pixel_count_next = '0;
                 end
-            end
-            
-            START_READ: begin
-                next_state = READING;
             end
             
             READING: begin
-                if (pixels_read_reg >= IMG_SIZE - 1) begin
-                    next_state = FRAME_COMPLETE;
-                end
-            end
-            
-            FRAME_COMPLETE: begin
-                next_state = WAIT_NEXT_FRAME;
-            end
-            
-            WAIT_NEXT_FRAME: begin
-                if (frame_start_sync) begin
-                    next_state = START_READ;
-                end
-            end
-            
-            default: next_state = IDLE;
-        endcase
-    end
-    
-    // Pixel counter logic - SIMPLIFIED
-    always_comb begin
-        pixels_read_next = pixels_read_reg;
-        
-        case (state)
-            IDLE, WAIT_READY, START_READ: begin
-                pixels_read_next = 18'd0;
-            end
-            
-            READING: begin
-                // Only increment when SDRAM provides data and FIFO has space
+                // Continuously read, wrapping at frame boundary
                 if (sdram_rx_enable && !fifo_full) begin
-                    if (pixels_read_reg < IMG_SIZE - 1) begin
-                        pixels_read_next = pixels_read_reg + 1;
+                    if (pixel_count >= TOTAL_PIXELS - 1) begin
+                        pixel_count_next = '0;  // Wrap to start
+                    end else begin
+                        pixel_count_next = pixel_count + 1;
                     end
                 end
             end
             
-            default: begin
-                pixels_read_next = pixels_read_reg;
+            WAIT_FRAME: begin
+                if (frame_start_edge) begin
+                    next_state = READING;
+                    pixel_count_next = '0;
+                end
             end
         endcase
     end
     
-    // Output logic
+    // Output control
     always_comb begin
         enable_read_mode = 1'b0;
-        reading_active = 1'b0;
+        fifo_write_enable = 1'b0;
+        fifo_write_data = sdram_data;
         frame_ready = 1'b0;
         
         case (state)
-            START_READ: begin
-                enable_read_mode = 1'b1;
-                reading_active = 1'b0;
-                frame_ready = 1'b0;
-            end
-            
             READING: begin
-                enable_read_mode = 1'b1;
-                reading_active = 1'b1;
-                frame_ready = 1'b0;
+                enable_read_mode = !fifo_full;
+                fifo_write_enable = sdram_rx_enable && !fifo_full;
+                frame_ready = (pixel_count > 0);
             end
             
-            FRAME_COMPLETE, WAIT_NEXT_FRAME: begin
-                enable_read_mode = 1'b0;
-                reading_active = 1'b0;
+            WAIT_FRAME: begin
                 frame_ready = 1'b1;
-            end
-            
-            default: begin
-                enable_read_mode = 1'b0;
-                reading_active = 1'b0;
-                frame_ready = 1'b0;
             end
         endcase
     end
     
-    // CRITICAL: Output the current pixel address to SDRAM
-    assign sdram_read_addr = {4'd0, pixels_read_reg};  // Pad to 22 bits if needed
+    // Dummy address output (not used by SDRAM controller)
+    assign sdram_read_addr = pixel_count;
     
-    // FIFO write logic - simplified, no complex line tracking
-    assign fifo_write_enable = sdram_rx_enable && reading_active && !fifo_full;
-    
-    // Choose data source for debugging
-    // Normal operation:
-    assign fifo_write_data = sdram_data;
-    
-    // For debugging - uncomment to use test pattern instead:
-    // assign fifo_write_data = {13'd0, pixels_read_reg[2:0]};  // 8-color test pattern
-    
-    // Registers
+    // State registers
     always_ff @(posedge clk_sdram or negedge rst_n) begin
         if (!rst_n) begin
             state <= IDLE;
-            pixels_read_reg <= 18'd0;
+            pixel_count <= '0;
         end else begin
             state <= next_state;
-            pixels_read_reg <= pixels_read_next;
+            pixel_count <= pixel_count_next;
         end
     end
 

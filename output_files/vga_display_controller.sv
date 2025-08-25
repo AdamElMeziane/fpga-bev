@@ -68,73 +68,68 @@ module vga_display_controller #(
                      (v_count < V_VISIBLE + V_FRONT + V_SYNC));
     assign frame_start = (h_count == 0) && (v_count == 0);
 
-    // Image display logic with proper pixel doubling for 320x240 -> 640x480
+    // Image display logic with pixel doubling for 320x240 -> 640x480
     logic in_image_area;
     logic need_new_pixel;
-    logic fifo_was_read;  // Track if we read from FIFO last cycle
-    logic [15:0] current_pixel_data;  // Store the current pixel data
-    logic pixel_valid;  // Track if we have valid pixel data
+    logic [15:0] current_pixel_data;
+    logic [15:0] next_pixel_data;
     
-    // We're in the image area if we're in the top-left 320x240 region
-    // But since we're displaying at 640x480, we need to double pixels
-    // So image area is actually the top-left 640x480 region (doubled)
-    assign in_image_area = (x < (IMG_WIDTH * 2)) && (y < (IMG_HEIGHT * 2));
+    // Track the source pixel position (what we're reading from FIFO)
+    logic [8:0] source_x;  // 0-319
+    logic [7:0] source_y;  // 0-239
     
-    // We need a new pixel from FIFO when:
-    // - We're at an even X and even Y position (start of a 2x2 block)
-    // - We're in the image area
-    // - We don't have valid data
+    // Calculate source pixel position (divide display position by 2)
+    assign source_x = x[9:1];  // x / 2 (for 320 width)
+    assign source_y = y[8:1];  // y / 2 (for 240 height)
+    
+    // We're displaying in the full 640x480 area with pixel doubling
+    assign in_image_area = (x < 640) && (y < 480);
+    
+    // We need a new pixel when:
+    // - We're at the start of a new 2x2 block (both x[0] and y[0] are 0)
+    // - AND we're in the display area
+    // - AND the source position is within the image bounds
     assign need_new_pixel = (x[0] == 1'b0) && (y[0] == 1'b0) && 
-                           in_image_area && !pixel_valid;
+                           in_image_area && 
+                           (source_x < IMG_WIDTH) && (source_y < IMG_HEIGHT);
     
     // Read FIFO when we need new pixel data
     assign fifo_read_enable = need_new_pixel && video_on && !fifo_empty;
     
-    // Track FIFO read and pixel data
+    // Capture FIFO data when available
     always_ff @(posedge clk_vga or negedge rst_n) begin
         if (!rst_n) begin
-            fifo_was_read <= 1'b0;
             current_pixel_data <= 16'd0;
-            pixel_valid <= 1'b0;
+            next_pixel_data <= 16'd0;
         end else begin
-            // Track if we initiated a read
-            fifo_was_read <= fifo_read_enable;
-            
-            // If we read from FIFO last cycle, capture the data
-            if (fifo_was_read) begin
-                current_pixel_data <= fifo_data;
-                pixel_valid <= 1'b1;
+            // If we read from FIFO, capture the data
+            if (fifo_read_enable) begin
+                next_pixel_data <= fifo_data;
             end
             
-            // Invalidate pixel when we leave the 2x2 block
-            // This happens when both x[0] and y[0] are 1 and we're about to move to next block
-            if ((x[0] == 1'b1) && (y[0] == 1'b1) && in_image_area) begin
-                // About to move to next 2x2 block
-                if (x < (IMG_WIDTH * 2 - 1)) begin
-                    // Still more pixels in this line
-                    pixel_valid <= 1'b0;
-                end else if (y[0] == 1'b1 && x >= (IMG_WIDTH * 2 - 1)) begin
-                    // End of doubled line, moving to next source line
-                    pixel_valid <= 1'b0;
-                end
+            // Update current pixel at the start of each 2x2 block
+            if (need_new_pixel) begin
+                current_pixel_data <= next_pixel_data;
             end
             
-            // Also invalidate at start of frame or when leaving image area
-            if (frame_start || !in_image_area) begin
-                pixel_valid <= 1'b0;
+            // Clear data when we leave the image area
+            if (!in_image_area || (source_x >= IMG_WIDTH) || (source_y >= IMG_HEIGHT)) begin
+                current_pixel_data <= 16'd0;
             end
         end
     end
     
-    // RGB output - use stored pixel data for the 2x2 block
+    // RGB output - display the same pixel for each 2x2 block
     always_ff @(posedge clk_vga or negedge rst_n) begin
         if (!rst_n) begin
             rgb <= 3'b000;
         end else begin
-            if (in_image_area && pixel_valid && video_on) begin
-                rgb <= current_pixel_data[2:0];  // Use the stored pixel data
+            if (in_image_area && video_on && 
+                (source_x < IMG_WIDTH) && (source_y < IMG_HEIGHT)) begin
+                // Display current pixel data for the entire 2x2 block
+                rgb <= current_pixel_data[2:0];
             end else begin
-                rgb <= 3'b000;  // Black outside image area or when no valid data
+                rgb <= 3'b000;  // Black outside image area
             end
         end
     end

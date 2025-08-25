@@ -1,5 +1,5 @@
 Flow report for pfa_sensor_fusion
-Mon Aug 18 11:55:15 2025
+Wed Aug 20 16:59:46 2025
 Quartus Prime Version 18.1.0 Build 625 09/12/2018 SJ Standard Edition
 
 
@@ -40,20 +40,20 @@ refer to the applicable agreement for further details.
 +--------------------------------------------------------------------------------------+
 ; Flow Summary                                                                         ;
 +------------------------------------+-------------------------------------------------+
-; Flow Status                        ; Successful - Mon Aug 18 11:55:11 2025           ;
+; Flow Status                        ; Successful - Wed Aug 20 16:59:43 2025           ;
 ; Quartus Prime Version              ; 18.1.0 Build 625 09/12/2018 SJ Standard Edition ;
 ; Revision Name                      ; pfa_sensor_fusion                               ;
 ; Top-level Entity Name              ; top_sdram_vga_system                            ;
 ; Family                             ; Cyclone IV E                                    ;
 ; Device                             ; EP4CE6E22C8                                     ;
 ; Timing Models                      ; Final                                           ;
-; Total logic elements               ; 1,091 / 6,272 ( 17 % )                          ;
-;     Total combinational functions  ; 850 / 6,272 ( 14 % )                            ;
-;     Dedicated logic registers      ; 655 / 6,272 ( 10 % )                            ;
-; Total registers                    ; 655                                             ;
+; Total logic elements               ; 479 / 6,272 ( 8 % )                             ;
+;     Total combinational functions  ; 435 / 6,272 ( 7 % )                             ;
+;     Dedicated logic registers      ; 279 / 6,272 ( 4 % )                             ;
+; Total registers                    ; 279                                             ;
 ; Total pins                         ; 50 / 92 ( 54 % )                                ;
 ; Total virtual pins                 ; 0                                               ;
-; Total memory bits                  ; 230,400 / 276,480 ( 83 % )                      ;
+; Total memory bits                  ; 236,544 / 276,480 ( 86 % )                      ;
 ; Embedded Multiplier 9-bit elements ; 0 / 30 ( 0 % )                                  ;
 ; Total PLLs                         ; 1 / 2 ( 50 % )                                  ;
 +------------------------------------+-------------------------------------------------+
@@ -64,7 +64,7 @@ refer to the applicable agreement for further details.
 +-------------------+---------------------+
 ; Option            ; Setting             ;
 +-------------------+---------------------+
-; Start date & time ; 08/18/2025 11:54:38 ;
+; Start date & time ; 08/20/2025 16:59:15 ;
 ; Main task         ; Compilation         ;
 ; Revision Name     ; pfa_sensor_fusion   ;
 +-------------------+---------------------+
@@ -75,7 +75,7 @@ refer to the applicable agreement for further details.
 +-------------------------------------+----------------------------------------+-------------------+----------------------+------------+
 ; Assignment Name                     ; Value                                  ; Default Value     ; Entity Name          ; Section Id ;
 +-------------------------------------+----------------------------------------+-------------------+----------------------+------------+
-; COMPILER_SIGNATURE_ID               ; 2542817210397.175551447721492          ; --                ; --                   ; --         ;
+; COMPILER_SIGNATURE_ID               ; 2542817210397.175570555420328          ; --                ; --                   ; --         ;
 ; MAX_CORE_JUNCTION_TEMP              ; 85                                     ; --                ; --                   ; --         ;
 ; MIN_CORE_JUNCTION_TEMP              ; 0                                      ; --                ; --                   ; --         ;
 ; NOMINAL_CORE_SUPPLY_VOLTAGE         ; 1.2V                                   ; --                ; --                   ; --         ;
@@ -94,11 +94,11 @@ refer to the applicable agreement for further details.
 +----------------------+--------------+-------------------------+---------------------+------------------------------------+
 ; Module Name          ; Elapsed Time ; Average Processors Used ; Peak Virtual Memory ; Total CPU Time (on all processors) ;
 +----------------------+--------------+-------------------------+---------------------+------------------------------------+
-; Analysis & Synthesis ; 00:00:12     ; 1.0                     ; 4839 MB             ; 00:00:22                           ;
-; Fitter               ; 00:00:18     ; 1.1                     ; 6147 MB             ; 00:00:27                           ;
-; Assembler            ; 00:00:01     ; 1.0                     ; 4679 MB             ; 00:00:01                           ;
-; Timing Analyzer      ; 00:00:03     ; 1.4                     ; 4869 MB             ; 00:00:03                           ;
-; Total                ; 00:00:34     ; --                      ; --                  ; 00:00:53                           ;
+; Analysis & Synthesis ; 00:00:21     ; 1.0                     ; 4861 MB             ; 00:00:29                           ;
+; Fitter               ; 00:00:05     ; 1.2                     ; 6138 MB             ; 00:00:08                           ;
+; Assembler            ; 00:00:01     ; 1.0                     ; 4680 MB             ; 00:00:01                           ;
+; Timing Analyzer      ; 00:00:02     ; 1.2                     ; 4865 MB             ; 00:00:02                           ;
+; Total                ; 00:00:29     ; --                      ; --                  ; 00:00:40                           ;
 +----------------------+--------------+-------------------------+---------------------+------------------------------------+
 
 

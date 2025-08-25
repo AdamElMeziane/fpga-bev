@@ -31,11 +31,11 @@ module top_sdram_vga_system (
     logic clk_133, clk_25, pll_locked;
     logic reset_sync_133, reset_sync_25;
 
-    // PLL for clock generation
-    pll_133Mhz pll_inst (
+    // PLL for clock generation  
+    pll_133Mhz pll_inst (  // Module name unchanged but outputs 143MHz
         .areset(~reset_n),
         .inclk0(clk_50MHz),
-        .c0(clk_133),          // 133MHz for SDRAM
+        .c0(clk_133),          // Actually 143MHz for -7 speed grade
         .locked(pll_locked)
     );
 
@@ -150,32 +150,29 @@ module top_sdram_vga_system (
     );
 
     //========================================================================
-    // SDRAM Controller Wrapper with External Addressing
+    // SDRAM Controller (using original without wrapper for now)
     //========================================================================
-    logic sdram_write_enable, sdram_write_ready;
-    logic sdram_read_enable, sdram_read_valid;
-    logic [17:0] sdram_write_addr, sdram_read_addr;
-    logic [15:0] sdram_write_data, sdram_read_data;
-    
-    sdram_controller_wrapper sdram_wrapper (
+    logic sdram_start;
+    logic sdram_enable_write_mode, sdram_enable_read_mode;
+    logic [15:0] sdram_incoming_data, sdram_outgoing_data;
+    logic sdram_enable_transmitter, sdram_enable_receiver;
+
+    // Start SDRAM when PLL is locked
+    assign sdram_start = pll_locked;
+
+    // Use the controller from document 8 (already in your files)
+    // It expects sequential access and manages its own addressing
+    sdram_controller sdram_ctrl (
         .rst_n(reset_sync_133),
         .clk(clk_133),
-        .start(pll_locked),
+        .start(sdram_start),
+        .enable_write_mode(sdram_enable_write_mode),
+        .enable_read_mode(sdram_enable_read_mode),
+        .incoming_data(sdram_incoming_data),
+        .outgoing_data(sdram_outgoing_data),
+        .enable_transmitter(sdram_enable_transmitter),
+        .enable_receiver(sdram_enable_receiver),
         .sdram_init_done(sdram_init_done),
-        
-        // Write interface
-        .write_enable(sdram_write_enable),
-        .write_addr(sdram_write_addr),
-        .write_data(sdram_write_data),
-        .write_ready(sdram_write_ready),
-        
-        // Read interface
-        .read_enable(sdram_read_enable),
-        .read_addr(sdram_read_addr),
-        .read_data(sdram_read_data),
-        .read_valid(sdram_read_valid),
-        
-        // SDRAM pins
         .dq(dq),
         .sclk(sclk),
         .cke(cke),
@@ -193,7 +190,7 @@ module top_sdram_vga_system (
     // Image Loader (ROM to SDRAM)
     //========================================================================
     logic loader_start;
-    logic [17:0] loader_sdram_addr;
+    logic [17:0] loader_sdram_addr;  // Address from loader (ignored by SDRAM controller)
     logic loader_write_enable;
     logic [15:0] loader_write_data;
     
@@ -208,10 +205,11 @@ module top_sdram_vga_system (
         .clk(clk_133),
         .start_loading(loader_start),
         .sdram_ready(sdram_init_done),
-        .sdram_tx_enable(sdram_write_ready),
+        .sdram_tx_enable(sdram_enable_transmitter),
         .rom_addr(rom_addr),
         .rom_pixel(rom_pixel),
         .pixel_data(loader_write_data),
+        .sdram_write_addr(loader_sdram_addr),  // Connected but ignored by SDRAM
         .enable_write_mode(loader_write_enable),
         .loading_complete(loader_loading_complete)
     );
@@ -222,7 +220,7 @@ module top_sdram_vga_system (
     logic vga_video_on, vga_frame_start;
     logic [9:0] vga_x, vga_y;
     logic fifo_read_enable;
-    logic [2:0] fifo_read_data;
+    logic [15:0] fifo_read_data;
     logic fifo_empty, fifo_half_full;
     logic [2:0] vga_rgb;
 
@@ -246,15 +244,15 @@ module top_sdram_vga_system (
     );
 
     //========================================================================
-    // FIFO Buffer (Clock Domain Crossing)
+    // FIFO Buffer (Clock Domain Crossing) - 16-bit throughout
     //========================================================================
     logic fifo_write_enable;
-    logic [2:0] fifo_write_data;
+    logic [15:0] fifo_write_data;
     logic fifo_full;
 
     fifo_buffer #(
-        .ADDR_WIDTH(7),     // 128 entries (much smaller!)
-        .DATA_WIDTH(3)      // 3-bit pixels
+        .ADDR_WIDTH(11),    // 2048 entries
+        .DATA_WIDTH(16)     // 16-bit data throughout
     ) pixel_fifo (
         .rst_n(reset_sync_133 & reset_sync_25),
         .clk_write(clk_133),
@@ -272,7 +270,7 @@ module top_sdram_vga_system (
     // VGA Frame Reader (SDRAM to FIFO)
     //========================================================================
     logic reader_enable_read;
-    logic [17:0] reader_sdram_addr;
+    logic [17:0] reader_sdram_addr;  // Address from reader (ignored by SDRAM)
     logic reader_frame_ready;
     logic reader_start;
     
@@ -287,11 +285,14 @@ module top_sdram_vga_system (
         .clk_sdram(clk_133),
         .clk_vga(clk_25),
         .sdram_ready(reader_start),
-        .sdram_rx_enable(sdram_read_valid),
-        .sdram_data(sdram_read_data),
+        .sdram_rx_enable(sdram_enable_receiver),
+        .sdram_data(sdram_outgoing_data),
         .enable_read_mode(reader_enable_read),
-        .sdram_read_addr(reader_sdram_addr),
+        .sdram_read_addr(reader_sdram_addr),  // Connected but ignored by SDRAM
         .frame_start(vga_frame_start),
+        .video_on(vga_video_on),  // FIXED: Added missing connection
+        .vga_x(vga_x),            // FIXED: Added missing connection
+        .vga_y(vga_y),            // FIXED: Added missing connection
         .fifo_write_enable(fifo_write_enable),
         .fifo_write_data(fifo_write_data),
         .fifo_full(fifo_full),
@@ -300,28 +301,22 @@ module top_sdram_vga_system (
     );
 
     //========================================================================
-    // SDRAM Access Arbitration
+    // SDRAM Access Control
     //========================================================================
     always_comb begin
-        // Default values
-        sdram_write_enable = 1'b0;
-        sdram_write_addr = 18'd0;
-        sdram_write_data = 16'd0;
-        sdram_read_enable = 1'b0;
-        sdram_read_addr = 18'd0;
+        // Control which module accesses SDRAM
+        sdram_enable_write_mode = 1'b0;
+        sdram_enable_read_mode = 1'b0;
+        sdram_incoming_data = 16'd0;
         
         case (sys_state)
             SYS_LOADING: begin
-                // Loader has priority
-                sdram_write_enable = loader_write_enable;
-                sdram_write_addr = loader_sdram_addr;
-                sdram_write_data = loader_write_data;
+                sdram_enable_write_mode = loader_write_enable;
+                sdram_incoming_data = loader_write_data;
             end
             
             SYS_DISPLAYING: begin
-                // Reader has priority
-                sdram_read_enable = reader_enable_read;
-                sdram_read_addr = reader_sdram_addr;
+                sdram_enable_read_mode = reader_enable_read;
             end
             
             default: begin

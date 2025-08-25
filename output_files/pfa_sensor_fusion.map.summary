@@ -1,14 +1,14 @@
-Analysis & Synthesis Status : Successful - Mon Aug 18 11:54:49 2025
+Analysis & Synthesis Status : Successful - Wed Aug 20 16:59:35 2025
 Quartus Prime Version : 18.1.0 Build 625 09/12/2018 SJ Standard Edition
 Revision Name : pfa_sensor_fusion
 Top-level Entity Name : top_sdram_vga_system
 Family : Cyclone IV E
-Total logic elements : 1,286
-    Total combinational functions : 848
-    Dedicated logic registers : 655
-Total registers : 655
+Total logic elements : 491
+    Total combinational functions : 431
+    Dedicated logic registers : 282
+Total registers : 282
 Total pins : 50
 Total virtual pins : 0
-Total memory bits : 230,400
+Total memory bits : 236,544
 Embedded Multiplier 9-bit elements : 0
 Total PLLs : 1
