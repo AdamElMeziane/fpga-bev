@@ -1,6 +1,11 @@
 Flow report for pfa_sensor_fusion
+<<<<<<< HEAD
 Mon Aug 25 16:59:27 2025
 Quartus Prime Version 20.1.1 Build 720 11/11/2020 SJ Lite Edition
+=======
+Wed Aug 20 16:59:46 2025
+Quartus Prime Version 18.1.0 Build 625 09/12/2018 SJ Standard Edition
+>>>>>>> 82cf0d9222bb07a33e630bda71302dccf3b6883c
 
 
 ---------------------
@@ -38,6 +43,7 @@ https://fpgasoftware.intel.com/eula.
 
 
 
+<<<<<<< HEAD
 +----------------------------------------------------------------------------------+
 ; Flow Summary                                                                     ;
 +------------------------------------+---------------------------------------------+
@@ -58,6 +64,28 @@ https://fpgasoftware.intel.com/eula.
 ; Embedded Multiplier 9-bit elements ; 0 / 30 ( 0 % )                              ;
 ; Total PLLs                         ; 1 / 2 ( 50 % )                              ;
 +------------------------------------+---------------------------------------------+
+=======
++--------------------------------------------------------------------------------------+
+; Flow Summary                                                                         ;
++------------------------------------+-------------------------------------------------+
+; Flow Status                        ; Successful - Wed Aug 20 16:59:43 2025           ;
+; Quartus Prime Version              ; 18.1.0 Build 625 09/12/2018 SJ Standard Edition ;
+; Revision Name                      ; pfa_sensor_fusion                               ;
+; Top-level Entity Name              ; top_sdram_vga_system                            ;
+; Family                             ; Cyclone IV E                                    ;
+; Device                             ; EP4CE6E22C8                                     ;
+; Timing Models                      ; Final                                           ;
+; Total logic elements               ; 479 / 6,272 ( 8 % )                             ;
+;     Total combinational functions  ; 435 / 6,272 ( 7 % )                             ;
+;     Dedicated logic registers      ; 279 / 6,272 ( 4 % )                             ;
+; Total registers                    ; 279                                             ;
+; Total pins                         ; 50 / 92 ( 54 % )                                ;
+; Total virtual pins                 ; 0                                               ;
+; Total memory bits                  ; 236,544 / 276,480 ( 86 % )                      ;
+; Embedded Multiplier 9-bit elements ; 0 / 30 ( 0 % )                                  ;
+; Total PLLs                         ; 1 / 2 ( 50 % )                                  ;
++------------------------------------+-------------------------------------------------+
+>>>>>>> 82cf0d9222bb07a33e630bda71302dccf3b6883c
 
 
 +-----------------------------------------+
@@ -65,7 +93,11 @@ https://fpgasoftware.intel.com/eula.
 +-------------------+---------------------+
 ; Option            ; Setting             ;
 +-------------------+---------------------+
+<<<<<<< HEAD
 ; Start date & time ; 08/25/2025 16:58:36 ;
+=======
+; Start date & time ; 08/20/2025 16:59:15 ;
+>>>>>>> 82cf0d9222bb07a33e630bda71302dccf3b6883c
 ; Main task         ; Compilation         ;
 ; Revision Name     ; pfa_sensor_fusion   ;
 +-------------------+---------------------+
@@ -76,7 +108,11 @@ https://fpgasoftware.intel.com/eula.
 +-------------------------------------+----------------------------------------+-------------------+----------------------+------------+
 ; Assignment Name                     ; Value                                  ; Default Value     ; Entity Name          ; Section Id ;
 +-------------------------------------+----------------------------------------+-------------------+----------------------+------------+
+<<<<<<< HEAD
 ; COMPILER_SIGNATURE_ID               ; 48437151132550.175613751624588         ; --                ; --                   ; --         ;
+=======
+; COMPILER_SIGNATURE_ID               ; 2542817210397.175570555420328          ; --                ; --                   ; --         ;
+>>>>>>> 82cf0d9222bb07a33e630bda71302dccf3b6883c
 ; MAX_CORE_JUNCTION_TEMP              ; 85                                     ; --                ; --                   ; --         ;
 ; MIN_CORE_JUNCTION_TEMP              ; 0                                      ; --                ; --                   ; --         ;
 ; MISC_FILE                           ; pll_143MHz_bb.v                        ; --                ; --                   ; --         ;
@@ -97,11 +133,19 @@ https://fpgasoftware.intel.com/eula.
 +----------------------+--------------+-------------------------+---------------------+------------------------------------+
 ; Module Name          ; Elapsed Time ; Average Processors Used ; Peak Virtual Memory ; Total CPU Time (on all processors) ;
 +----------------------+--------------+-------------------------+---------------------+------------------------------------+
+<<<<<<< HEAD
 ; Analysis & Synthesis ; 00:00:36     ; 1.0                     ; 4816 MB             ; 00:00:46                           ;
 ; Fitter               ; 00:00:05     ; 1.1                     ; 5511 MB             ; 00:00:07                           ;
 ; Assembler            ; 00:00:01     ; 1.0                     ; 4690 MB             ; 00:00:01                           ;
 ; Timing Analyzer      ; 00:00:03     ; 1.1                     ; 4772 MB             ; 00:00:02                           ;
 ; Total                ; 00:00:45     ; --                      ; --                  ; 00:00:56                           ;
+=======
+; Analysis & Synthesis ; 00:00:21     ; 1.0                     ; 4861 MB             ; 00:00:29                           ;
+; Fitter               ; 00:00:05     ; 1.2                     ; 6138 MB             ; 00:00:08                           ;
+; Assembler            ; 00:00:01     ; 1.0                     ; 4680 MB             ; 00:00:01                           ;
+; Timing Analyzer      ; 00:00:02     ; 1.2                     ; 4865 MB             ; 00:00:02                           ;
+; Total                ; 00:00:29     ; --                      ; --                  ; 00:00:40                           ;
+>>>>>>> 82cf0d9222bb07a33e630bda71302dccf3b6883c
 +----------------------+--------------+-------------------------+---------------------+------------------------------------+
 
 

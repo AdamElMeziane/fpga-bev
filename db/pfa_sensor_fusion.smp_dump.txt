@@ -6,6 +6,7 @@ state.LOAD 0 0 1 1
 state.WAIT_WRITE 0 1 0 1 
 state.DONE 1 0 0 1 
 
+<<<<<<< HEAD
 State Machine - |top_sdram_vga_system|sdram_controller:sdram_ctrl|read_state
 Name read_state.READ_DONE read_state.READ_WAIT_CL read_state.READ_CMD read_state.READ_WAIT_RCD read_state.READ_ACTIVATE read_state.READ_IDLE 
 read_state.READ_IDLE 0 0 0 0 0 0 
@@ -32,3 +33,48 @@ state.LOAD_MODE 0 0 0 1 0 1
 state.AUTO_REFRESH_1 0 0 1 0 0 1 
 state.AUTO_REFRESH_2 0 1 0 0 0 1 
 state.READY 1 0 0 0 0 1 
+=======
+State Machine - |top_sdram_vga_system|vga_frame_reader:frame_reader|state
+Name state.WAIT_FRAME state.READING state.WAIT_READY state.IDLE 
+state.IDLE 0 0 0 0 
+state.WAIT_READY 0 0 1 1 
+state.READING 0 1 0 1 
+state.WAIT_FRAME 1 0 0 1 
+
+State Machine - |top_sdram_vga_system|image_loader:img_loader|state
+Name state.DONE state.WRITING state.WAIT_SDRAM state.IDLE 
+state.IDLE 0 0 0 0 
+state.WAIT_SDRAM 0 0 1 1 
+state.WRITING 0 1 0 1 
+state.DONE 1 0 0 1 
+
+State Machine - |top_sdram_vga_system|sdram_controller:sdram_ctrl|state
+Name state.ST_tRP_AFTER_RD state.ST_READ_BURST state.ST_READ_LAT state.ST_READ_CMD state.ST_tRCD_RD state.ST_ACT_RD state.ST_tRP_AFTER_WR state.ST_WRITE_BURST state.ST_WRITE_CMD state.ST_tRCD_WR state.ST_ACT_WR state.ST_REFRESH_tRFC state.ST_REFRESH_AR state.ST_REFRESH_tRP state.ST_REFRESH_PRE state.ST_IDLE state.ST_tMRD state.ST_MRS state.ST_tRFC2 state.ST_AR2 state.ST_tRFC1 state.ST_AR1 state.ST_tRP_WAIT state.ST_PRECHARGE_ALL state.ST_PWRUP_NOP state.ST_WAIT_START state.ST_RESET 
+state.ST_RESET 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+state.ST_WAIT_START 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 
+state.ST_PWRUP_NOP 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 1 
+state.ST_PRECHARGE_ALL 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 1 
+state.ST_tRP_WAIT 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 1 
+state.ST_AR1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 1 
+state.ST_tRFC1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 1 
+state.ST_AR2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 1 
+state.ST_tRFC2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 1 
+state.ST_MRS 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 1 
+state.ST_tMRD 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 1 
+state.ST_IDLE 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 1 
+state.ST_REFRESH_PRE 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 1 
+state.ST_REFRESH_tRP 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 1 
+state.ST_REFRESH_AR 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 1 
+state.ST_REFRESH_tRFC 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 
+state.ST_ACT_WR 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 
+state.ST_tRCD_WR 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 
+state.ST_WRITE_CMD 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 
+state.ST_WRITE_BURST 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 
+state.ST_tRP_AFTER_WR 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 
+state.ST_ACT_RD 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 
+state.ST_tRCD_RD 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 
+state.ST_READ_CMD 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 
+state.ST_READ_LAT 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 
+state.ST_READ_BURST 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 
+state.ST_tRP_AFTER_RD 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 
+>>>>>>> 82cf0d9222bb07a33e630bda71302dccf3b6883c

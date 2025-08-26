@@ -96,6 +96,7 @@ module  pll_133Mhz_altpll
 		pll1.clk0_divide_by = 50,
 		pll1.clk0_duty_cycle = 50,
 		pll1.clk0_multiply_by = 143,
+		pll1.clk0_multiply_by = 143,
 		pll1.clk0_phase_shift = "0",
 		pll1.compensate_clock = "clk0",
 		pll1.inclk0_input_frequency = 20000,
